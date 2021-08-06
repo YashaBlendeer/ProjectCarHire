@@ -26,11 +26,11 @@
             <div class="panel-heading">
                 <span th:utext="${userName}"></span>
             </div>
-            <div class="panel-body">
-                <img th:src="@{/images/beer.jpg}" class="img-responsive center-block" width="400" height="400"
-                     alt="Beer"/>
+<!--            <p class="message-text text-center" th:utext="${adminMessage}"></p>-->
+            <div class="message-text text-center" sec:authorize="hasAuthority('ADMIN')">
+                Hi, <span sec:authentication="name"></span>. You are authenticated as <span
+                    sec:authentication="principal.authorities"></span>
             </div>
-            <p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
         </div>
     </div>
 
