@@ -3,6 +3,7 @@ package com.yashablendeer.carhire.controller;
 import com.yashablendeer.carhire.model.User;
 import com.yashablendeer.carhire.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,10 @@ public class LoginController {
     @GetMapping(value={"/", "/login"})
     public ModelAndView login(){
         ModelAndView modelAndView = new ModelAndView();
+        if (isAuthenticated()) {
+            modelAndView.setViewName("insides/home");
+            return modelAndView;
+        }
         modelAndView.setViewName("login");
         return modelAndView;
     }
@@ -29,6 +34,10 @@ public class LoginController {
     @GetMapping(value="/registration")
     public ModelAndView registration(){
         ModelAndView modelAndView = new ModelAndView();
+        if (isAuthenticated()) {
+            modelAndView.setViewName("insides/home");
+            return modelAndView;
+        }
         User user = new User();
         modelAndView.addObject("user", user);
         modelAndView.setViewName("registration");
@@ -70,6 +79,16 @@ public class LoginController {
         modelAndView.addObject("showUsers", userService.findAllUsers());
         modelAndView.setViewName("insides/home");
         return modelAndView;
+    }
+
+    //Utility methods
+    private boolean isAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || AnonymousAuthenticationToken.class.
+                isAssignableFrom(authentication.getClass())) {
+            return false;
+        }
+        return authentication.isAuthenticated();
     }
 
 }
