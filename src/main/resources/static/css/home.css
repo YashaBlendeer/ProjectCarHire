@@ -3,3 +3,19 @@ message-text {
     font-size: 22px;
     color: #004080;
 }
+.styled-table {
+    align-content: center;
+    text-align: center;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.styled-table th {
+    text-align: center;
+
+}
