@@ -43,7 +43,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers(loginPage).permitAll()
                 .antMatchers("/registration").permitAll()
-                .antMatchers("/insides/**").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers("/mainPage").permitAll()
+                .antMatchers("/insides/**").hasAnyAuthority("ADMIN", "USER", "MANAGER")
                 .anyRequest()
                 .authenticated()
                 .and().csrf().disable()
@@ -65,7 +66,4 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .ignoring()
                 .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**", "/error");
     }
-
-
-
 }

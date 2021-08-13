@@ -24,7 +24,7 @@ public class LoginController {
     public ModelAndView login(){
         ModelAndView modelAndView = new ModelAndView();
         if (SecurityUtil.isAuthenticated()) {
-            modelAndView.setViewName("insides/home");
+            modelAndView.setViewName("redirect:insides/home");
             return modelAndView;
         }
         modelAndView.setViewName("login");

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Main</h1>
+<div>
+    <table class="styled-table">
+        <thead>
+        <th>ID</th>
+        <th>Mark</th>
+        </thead>
+
+        <tbody th:each="car : ${showCars}">
+        <tr>
+            <td th:text="${car.id}">id</td>
+            <td th:text="${car.carMark}">name</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

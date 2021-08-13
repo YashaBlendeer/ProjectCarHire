@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,6 +40,10 @@ public class UserService {
         return userRepository.findByUserName(userName);
     }
 
+    public User findUserByUserId(int userId) {
+        return userRepository.findUserById(userId);
+    }
+
     public  List<String> findAllUsersByName() {
         return userRepository.findAll().stream().map(x -> x.getName()).collect(Collectors.toList());
     }
@@ -56,5 +61,35 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    //TODO refactor
+    public User banHandler(int userId) {
+        User user = findUserByUserId(userId);
+        if (user.getActive()) {
+            user.setActive(false);
+        } else {
+            user.setActive(true);
+        }
 
+        return userRepository.save(user);
+    }
+
+
+    public User managerUpgrade(int id) {
+        User user = findUserByUserId(id);
+        Role managerRole = roleRepository.findByRole("MANAGER");
+        boolean isManager = user.getRoles().contains(managerRole);
+        System.out.println("============================");
+        System.out.println(user.getRoles());
+        System.out.println(isManager);
+
+        System.out.println("============================");
+        if(isManager) {
+            Role userRole = roleRepository.findByRole("USER");
+            user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+        } else {
+            Role userRole = roleRepository.findByRole("MANAGER");
+            user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+        }
+        return userRepository.save(user);
+    }
 }

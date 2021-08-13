@@ -22,7 +22,7 @@ public class MyUserDetailsService implements UserDetailsService {
     private UserService userService;
 
     @Override
-    @Transactional
+    @Transactional //не работает без
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         User user = userService.findUserByUserName(userName);
         List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());

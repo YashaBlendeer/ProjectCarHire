@@ -22,7 +22,7 @@ public class RegistrationController {
     public ModelAndView registration(){
         ModelAndView modelAndView = new ModelAndView();
         if (SecurityUtil.isAuthenticated()) {
-            modelAndView.setViewName("insides/home");
+            modelAndView.setViewName("redirect:insides/home");
             return modelAndView;
         }
 

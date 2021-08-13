@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
 </head>
 
 <body>
@@ -40,19 +40,37 @@
                     <thead>
                         <th>ID</th>
                         <th>Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                        <th>Roles</th>
+                        <th>Upgrade</th>
                     </thead>
 
-                    <tbody th:each="user : ${showUsers}">
+                    <tbody th:each="user : ${showUsers}" >
                         <tr>
                             <td th:text="${user.id}">id</td>
                             <td th:text="${user.name}">name</td>
+
+                            <td th:text="${user.active} ? 'Active' : 'Banned'">status</td>
+                            <td><a th:utext="${user.active} ? 'Ban' : 'Unban'"
+                                   th:href="@{/ban_user(personId=${user.id})}"
+                                   th:each="role : ${user.getRoles}"
+                                   th:classappend="${role.role} == 'ADMIN' ? disabled : active"
+                                   class="btn btn-danger"></a></td>
+
+                            <td th:each="role : ${user.getRoles}" th:text="${role.role}">role</td>
+                            <td><a th:each="role : ${user.getRoles}"
+                                   th:utext="${role.role} == 'MANAGER' ? 'Downgrade' : 'Upgrade'"
+                                   th:href="@{/manager_handler(personId=${user.id})}"
+                                   th:classappend="${role.role} == 'ADMIN' ? disabled : active"
+                                   class="btn btn-primary"></a></td>
                         </tr>
                     </tbody>
                 </table>
-
-
                 </div>
             </div>
+            <a th:href="@{/mainPage}" class="btn btn-success">Main Page</a>
+
         </div>
     </div>
 </div>
