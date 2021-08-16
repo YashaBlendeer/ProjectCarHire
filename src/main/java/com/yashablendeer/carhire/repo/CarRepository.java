@@ -8,7 +8,11 @@ import java.util.List;
 
 @Repository
 public interface CarRepository  extends JpaRepository<Car, Long> {
+    Car findById(int id);
     Car findByCarMark(String carMark);
     Car findByCarQuality(String carQuality);
+    //TODO upd car??
+    void deleteById(int id);
     List<Car> findAll();
+
 }

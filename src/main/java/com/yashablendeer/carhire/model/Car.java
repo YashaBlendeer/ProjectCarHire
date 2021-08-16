@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
@@ -33,11 +34,11 @@ public class Car {
     private String carMark;
 
     @Column(name = "quality")
-    @Length(min = 1, max = 1, message = "*Car quality class must have 1 letter")
+    @Length(min = 1, message = "*Car quality class must have 1 letter")
     @NotEmpty(message = "*Please provide a car quality class")
     private String carQuality;
 
     @Column(name = "price")
-    @NotEmpty(message = "*Please provide a car price per hour")
+    @NotNull(message = "*Please provide a car price per hour")
     private int carPrice;
 }

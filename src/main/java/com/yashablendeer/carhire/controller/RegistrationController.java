@@ -21,13 +21,13 @@ public class RegistrationController {
     @GetMapping(value="/registration")
     public ModelAndView registration(){
         ModelAndView modelAndView = new ModelAndView();
+
         if (SecurityUtil.isAuthenticated()) {
             modelAndView.setViewName("redirect:insides/home");
             return modelAndView;
         }
+        modelAndView.addObject("user", new User());
 
-        User user = new User();
-        modelAndView.addObject("user", user);
         modelAndView.setViewName("registration");
         return modelAndView;
     }

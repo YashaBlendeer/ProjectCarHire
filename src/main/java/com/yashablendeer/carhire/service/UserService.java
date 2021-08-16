@@ -73,23 +73,18 @@ public class UserService {
         return userRepository.save(user);
     }
 
-
+    //TODO refactor
     public User managerUpgrade(int id) {
         User user = findUserByUserId(id);
         Role managerRole = roleRepository.findByRole("MANAGER");
         boolean isManager = user.getRoles().contains(managerRole);
-        System.out.println("============================");
-        System.out.println(user.getRoles());
-        System.out.println(isManager);
-
-        System.out.println("============================");
+        Role userRole;
         if(isManager) {
-            Role userRole = roleRepository.findByRole("USER");
-            user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+            userRole = roleRepository.findByRole("USER");
         } else {
-            Role userRole = roleRepository.findByRole("MANAGER");
-            user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+            userRole = roleRepository.findByRole("MANAGER");
         }
+        user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
         return userRepository.save(user);
     }
 }
