@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -64,7 +65,7 @@ public class PagesController {
 
     }
 
-    @GetMapping(value="/addCar")
+    @GetMapping(value="/carPage")
     public ModelAndView addCar(){
         ModelAndView modelAndView = new ModelAndView();
         Car car = new Car();
@@ -73,7 +74,7 @@ public class PagesController {
         return modelAndView;
     }
 
-    @PostMapping(value = "/addCar")
+    @PostMapping(value = "/carPage")
     public ModelAndView createNewCar(@Valid Car car, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         if (bindingResult.hasErrors()) {
@@ -88,38 +89,38 @@ public class PagesController {
         return modelAndView;
     }
 
-//    @RequestMapping(value = "/updateCar", method = RequestMethod.GET)
-//    public ModelAndView updateCar(@RequestParam(name="carId")int carId) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        userService.banHandler(carId);
-//        modelAndView.setViewName("redirect:insides/home");
-//        return modelAndView;
-//    }
-
     @RequestMapping(value = "mainPage/deleteCar", method = RequestMethod.GET)
-    public ModelAndView updateCar(@RequestParam(name="carId")int carId) {
+    public ModelAndView deleteCar(@RequestParam(name="carId")int carId) {
         ModelAndView modelAndView = new ModelAndView();
-        System.out.println("=======================");
-        System.out.println("inside");
-        System.out.println("=======================");
         carService.deleteCarById(carId);
         //TODO add success message
         modelAndView.setViewName("redirect:/mainPage");
         return modelAndView;
     }
 
-//    @RequestMapping(value = "/carUpdate", method = RequestMethod.POST)
-//    public ModelAndView carUpdateHandler(@Valid Car car, BindingResult bindingResult) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        if (bindingResult.hasErrors()) {
-//            modelAndView.setViewName("mainPage");
-//        } else {
-//            carService.updateCar(car.getId(), car);
-////            modelAndView.addObject("successMessage", "Car has been updated successfully");
-//            modelAndView.addObject("car", new Car());
-//            modelAndView.setViewName("mainPage");
-//
-//        }
-//        return modelAndView;
-//    }
+    @RequestMapping(value = "carUpdatePage/{id}", method = RequestMethod.GET)
+    public ModelAndView editCar(@PathVariable(name = "id") int id) {
+        ModelAndView modelAndView = new ModelAndView();
+        Car car = carService.findCarById(id);
+        modelAndView.addObject("car", car);
+        modelAndView.setViewName("carUpdatePage");
+        return modelAndView;
+    }
+
+    @RequestMapping(path = "carUpdatePage/{id}", method = RequestMethod.POST)
+    public ModelAndView carUpdateHandler(@Valid Car car, BindingResult bindingResult, @PathVariable("id") Integer id,
+            RedirectAttributes redirectAttrs) {
+        ModelAndView modelAndView = new ModelAndView();
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("carUpdatePage/{id}");
+        } else {
+            carService.updateCar(car.getId(), car);
+//            modelAndView.addObject("successMessage", "Car has been updated successfully");
+            redirectAttrs.addAttribute("id", id).addFlashAttribute("successMessage", "Car has been updated successfully");;
+            modelAndView.addObject("car", new Car());
+            modelAndView.setViewName("redirect:{id}");
+
+        }
+        return modelAndView;
+    }
 }

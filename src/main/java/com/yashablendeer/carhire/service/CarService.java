@@ -37,13 +37,14 @@ public class CarService {
     }
 
     public Car saveCar(Car car) {
-        System.out.println("=========================");
-        System.out.println("save car insode");
-        System.out.println("=========================");
         return carRepository.save(car);
     }
 
+    //TODO refactor
     public Car updateCar(Integer id, Car car) {
+        System.out.println("=====================");
+        System.out.println("upd");
+        System.out.println("=====================");
         Car fromDb = findCarById(id);
         fromDb.setCarName(car.getCarName());
         fromDb.setCarMark(car.getCarMark());

@@ -13,39 +13,60 @@
 </head>
 <body>
 <h1>Upd</h1>
-<!--<div>-->
-<!--  <table class="table table-striped">-->
-<!--    <thead>-->
-<!--    <th>ID</th>-->
-<!--    <th>Name</th>-->
-<!--    <th>Mark</th>-->
-<!--    <th>Quality</th>-->
-<!--    <th>Price</th>-->
-<!--    <th>Update</th>-->
-<!--    </thead>-->
+<div>
+  <form autocomplete="off" th:action="@{'/carUpdatePage/' + ${car.id}}"
+        th:object="${car}" method="post" class="form-horizontal"
+        role="form">
+    <div class="form-group">
+      <div class="col-sm-9">
 
-<!--    <tbody th:each="car : ${showCars}">-->
-<!--    <tr>-->
-<!--      <td th:text="${car.id}">id</td>-->
-<!--      <td th:text="${car.carName}">name</td>-->
-<!--      <td th:text="${car.carMark}">mark</td>-->
-<!--      <td th:text="${car.carQuality}">qual</td>-->
-<!--      <td th:text="${car.carPrice}">price</td>-->
-<!--      <td><a th:href="@{/carUpdate(carId=${car.id})}"-->
-<!--             th:text="#{common.update}"-->
-<!--             class="btn btn-primary"></a></td>-->
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--  </table>-->
-<!--</div>-->
+        <div class="form-group">
+          <div class="col-sm-9">
+            <input type="text" th:field="*{carName}" placeholder="Car name"
+                   class="form-control"/>
+            <label th:if="${#fields.hasErrors('carName')}" th:errors="*{carName}"
+                   class="validation-message"></label>
+          </div>
+        </div>
 
-<!--<form class="col card p-3 my-5" method="post" th:action="/carUpdate" th:object="${car}">-->
-<!--  <div class="form-group">-->
-<!--    <label for="carName">Name</label>-->
-<!--    <input class="form-control" id="carName" placeholder="Enter Name" required-->
-<!--           th:field="*{carName}"-->
-<!--           type="text"/>-->
-<!--  </div>-->
-<!--</form>-->
+        <div class="form-group">
+          <div class="col-sm-9">
+            <input type="text" th:field="*{carMark}" placeholder="Car mark"
+                   class="form-control"/> <label
+                  th:if="${#fields.hasErrors('carMark')}" th:errors="*{carMark}"
+                  class="validation-message"></label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-9">
+            <input type="text" th:field="*{carQuality}" placeholder="Car quality"
+                   class="form-control"/> <label
+                  th:if="${#fields.hasErrors('carQuality')}" th:errors="*{carQuality}"
+                  class="validation-message"></label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-9">
+            <input type="text" th:field="*{carPrice}" placeholder="Car price"
+                   class="form-control"/> <label
+                  th:if="${#fields.hasErrors('carPrice')}" th:errors="*{carPrice}"
+                  class="validation-message"></label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-9">
+            <button type="submit" class="btn btn-primary btn-block">Edit car</button>
+          </div>
+        </div>
+
+        <h2><span class="text-success" th:utext="${successMessage}"></span></h2>
+
+      </div>
+    </div>
+  </form>
+</div>
 </body>
 </html>
