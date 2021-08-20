@@ -2,6 +2,7 @@ package com.yashablendeer.carhire.service;
 
 import com.yashablendeer.carhire.model.Car;
 import com.yashablendeer.carhire.model.Role;
+import com.yashablendeer.carhire.model.Status;
 import com.yashablendeer.carhire.model.User;
 import com.yashablendeer.carhire.repo.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,18 +38,17 @@ public class CarService {
     }
 
     public Car saveCar(Car car) {
+        car.setStatus(Status.READY);
         return carRepository.save(car);
     }
 
-    //TODO refactor
+    //TODO refactor Car builder
     public Car updateCar(Integer id, Car car) {
-        System.out.println("=====================");
-        System.out.println("upd");
-        System.out.println("=====================");
         Car fromDb = findCarById(id);
         fromDb.setCarName(car.getCarName());
         fromDb.setCarMark(car.getCarMark());
         fromDb.setCarQuality(car.getCarQuality());
+        fromDb.setStatus(Status.READY);
         fromDb.setCarPrice(car.getCarPrice());
 
         return carRepository.save(fromDb);

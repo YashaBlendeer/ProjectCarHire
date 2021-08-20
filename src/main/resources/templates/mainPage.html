@@ -7,92 +7,55 @@
     <title>Cars</title>
     <meta charset="ISO-8859-1" />
 <!--    <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}"/>-->
-    <link rel="stylesheet" type="text/css" th:href="@{../static/css/style.scss}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{../static/css/home.css}"/>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
-<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
-<!--    <script src = "https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" defer ></script>-->
-<!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
-<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet">-->
-
-    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" link rel="stylesheet" type="text/css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
 
 </head>
 <body>
-<h1>Car page</h1>
+<h1>Main page</h1>
 <div>
-
-    <table id="mymy" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <table id="example" class="table table-hover">
         <thead>
-        <tr>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Office</th>
-            <th>Age</th>
-            <th>Start date</th>
-            <th>Salary</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>Tiger Nixon</td>
-            <td>System Architect</td>
-            <td>Edinburgh</td>
-            <td>61</td>
-            <td>2011/04/25</td>
-            <td>$320,800</td>
-        </tr>
-        <tr>
-            <td>Garrett Winters</td>
-            <td>Accountant</td>
-            <td>Tokyo</td>
-            <td>63</td>
-            <td>2011/07/25</td>
-            <td>$170,750</td>
-        </tr>
-        <tr>
-            <td>Ashton Cox</td>
-            <td>Junior Technical Author</td>
-            <td>San Francisco</td>
-            <td>66</td>
-            <td>2009/01/12</td>
-            <td>$86,000</td>
-        </tr>
-        </tbody>
-    </table>
-    <table  id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
-        <thead>
-        <th>ID</th>
         <th>Name</th>
         <th>Mark</th>
         <th>Quality</th>
         <th>Price</th>
-        <th>Delete</th>
-        <th>Update</th>
+        <th sec:authorize="hasAuthority('ADMIN')">Update</th>
+        <th sec:authorize="hasAuthority('ADMIN')">Delete</th>
+        <th sec:authorize="hasAuthority('USER')">Order</th>
         </thead>
 
         <tbody th:each="car : ${showCars}">
         <tr>
-            <td th:text="${car.id}">id</td>
+<!--            <td th:text="${car.id}">id</td>-->
             <td th:text="${car.carName}">name</td>
             <td th:text="${car.carMark}">mark</td>
             <td th:text="${car.carQuality}">qual</td>
             <td th:text="${car.carPrice}">price</td>
-            <td><a th:href="@{mainPage/deleteCar(carId=${car.id})}"
+            <td sec:authorize="hasAuthority('ADMIN')"><a th:text="#{common.text.update}"
+                   th:href="@{'carUpdatePage/' + ${car.id}}"
                    class="btn btn-primary"></a></td>
-<!--            add /-->
-            <td><a th:href="@{'carUpdatePage/' + ${car.id}}"
+            <td sec:authorize="hasAuthority('ADMIN')">
+                    <a th:text="#{common.text.delete}"
+                   th:href="@{mainPage/deleteCar(carId=${car.id})}"
+                   class="btn btn-danger"></a></td>
+            <td sec:authorize="hasAuthority('USER')">
+                <a th:text="#{common.text.order}"
+                   th:href="@{'carOrderPage/' + ${car.id}}"
                    class="btn btn-primary"></a></td>
         </tr>
         </tbody>
     </table>
+
+    <a th:href="@{/insides/home}" class="btn btn-success">Home Page</a>
+
 </div>
 
-<script src="../static/js/scriptTableSort.js"></script>
+<!--<script src="../static/js/orderHandler.js"></script>-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

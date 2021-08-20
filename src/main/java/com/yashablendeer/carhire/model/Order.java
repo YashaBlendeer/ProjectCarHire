@@ -5,10 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -22,23 +24,49 @@ public class Order {
     @Column(name = "order_id")
     private int id;
 
+    //TODO Cascade Type?
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "car_id", nullable = false)
+//    @NotEmpty
     private Car car;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
+//    @NotEmpty
     private User user;
+
+    @Column(name = "user_passport")
+    @NotEmpty(message = "*Please provide passport information")
+    private String passport;
 
     @Column(name = "withDriver")
     private Boolean withDriver;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    @NotNull(message = "*Please provide a start date of ordering")
+    private LocalDateTime startTime;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    @NotNull(message = "*Please provide an end date of ordering")
+    private LocalDateTime endTime;
 
     @Column(name = "price")
     @NotNull
     private int orderPrice;
 
+    //TODO enumerated?
     //TODO add default
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
+//    @Value("WAITING")
     private Status status;
+
+    @Column(name = "pay_status")
+    @Enumerated(EnumType.STRING)
+//    @Value("UNPAYED")
+    private Status payStatus;
+
+    @Column(name = "description")
+    private String description;
+
 }

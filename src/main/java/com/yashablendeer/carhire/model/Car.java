@@ -41,4 +41,9 @@ public class Car {
     @Column(name = "price")
     @NotNull(message = "*Please provide a car price per hour")
     private int carPrice;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+//    @Value("READY")
+    private Status status;
 }

@@ -2,7 +2,14 @@ package com.yashablendeer.carhire.model;
 
 public enum Status {
     WAITING,
-    DECLINED,
-    APPROVED,
-    FINISHED
+    REJECTED,
+    ACCEPTED,
+    FINISHED,
+    PAYED,
+    UNPAYED,
+
+    //CAR STATUS
+    REPAIR,
+    INUSE,
+    READY
 }

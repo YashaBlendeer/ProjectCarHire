@@ -15,7 +15,7 @@
 
 <h1>Car add page</h1>
 <div>
-  <form autocomplete="off" th:action="@{/addCar}"
+  <form autocomplete="off" th:action="@{/carPage}"
         th:object="${car}" method="post" class="form-horizontal"
         role="form">
     <div class="form-group">
@@ -64,6 +64,7 @@
         </div>
 
         <h2><span class="text-success" th:utext="${successMessage}"></span></h2>
+        <a th:href="@{/insides/home}" class="btn btn-success">Home Page</a>
 
       </div>
     </div>

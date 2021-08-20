@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Order Page</title>
+    <meta charset="ISO-8859-1" />
+    <link rel="stylesheet" type="text/css" th:href="@{../static/css/home.css}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+</head>
+<body>
+<h1>Order car</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form autocomplete="off" th:action="@{'/carOrderPage/' + ${currentCar.id}}"
+                  th:object="${order}" method="post" class="form-horizontal"
+                  role="form">
+                <label for="userName">Ordered by:</label>
+                <input type="text" class="form-control" id="userName" th:value="${userName}" readonly>
+
+<!--                TODO solve problem with setting order id automatically-->
+<!--                div to reset order id, which sets from PathVariable {id}-->
+<!--                it sets 0 instead of null?-->
+                <div hidden="hidden">
+                    <label for="orderId">id order:</label>
+                    <input type="text" class="form-control" id="orderId"
+                           th:field="*{id}"
+                           readonly>
+                </div>
+
+<!--                <div>-->
+<!--                    <label for="carId">id carId:</label>-->
+<!--                    <input type="text" class="form-control" id="carId"-->
+<!--                           th:field="*{car}"-->
+<!--                           th:value="${currentCar}"-->
+<!--                           >-->
+<!--                </div>-->
+
+
+<!--                th:field="*{ingredients[__${ingredientStat.index}__].id}"-->
+
+                <label for="carName">Ordered car:</label>
+                <input type="text" class="form-control" id="carName"
+                       th:value="${currentCar.carName}"
+                       readonly>
+
+                <label for="carPrice">Car price per hour:</label>
+                <input type="text" class="form-control" id="carPrice" th:value="${currentCar.carPrice}" readonly>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div th:text="#{orderPage.text.passport}"></div>
+                        <label th:if="${#fields.hasErrors('passport')}" th:errors="*{passport}"
+                               class="validation-message"></label>
+                        <input th:field="*{passport}"
+                               placeholder="Passport" class="form-control"/>
+                    </div>
+                </div>
+
+<!--                TODO remove hardcode driver price-->
+                <label for="driverPrice">Driver price per hour:</label>
+                <input type="text" class="form-control" id="driverPrice" th:value="30" readonly>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="form-check">
+                            <label class="form-check-label" for="driver">With driver</label>
+                            <input th:checked="*{withDriver}" th:field="*{withDriver}"
+                                   class="form-check-input" type="checkbox" id="driver">
+                        </div>
+                    </div>
+                </div>
+
+
+<!--                TODO add th:error for dates-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label for="startdatetime">Start date:</label>
+                        <input th:field="*{startTime}"
+                               th:attr="min=${now}"
+                               onchange="getStartTime()"
+                               id="startdatetime" type="datetime-local"  class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label for="enddatetime">End date:</label>
+                        <input th:field="*{endTime}"
+                               th:attr="min=${then}"
+                               onchange="getEndTime()"
+                               id="enddatetime" type="datetime-local"  class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label for="orderprice">Price:</label>
+                        <input th:field="*{orderPrice}"
+                               id="orderprice" type="text"  class="form-control" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <button type="submit" class="btn btn-primary btn-block">Order car</button>
+                    </div>
+                </div>
+            </form>
+
+            <h2><span class="text-success" th:utext="${successMessage}"></span></h2>
+            <a th:href="@{/insides/home}" class="btn btn-success">Home Page</a>
+
+        </div>
+    </div>
+</div>
+
+<script src="../static/js/orderHandler.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+</body>
+</html>
