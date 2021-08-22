@@ -54,6 +54,11 @@ public class CarService {
         return carRepository.save(fromDb);
     }
 
+    public Car repairHandler(Integer id) {
+        Car car =  carRepository.findById(id);
+        car.setStatus(Status.REPAIR);
+        return carRepository.save(car);
+    }
     @Transactional
     public void deleteCarById(int id) {
         carRepository.deleteById(id);

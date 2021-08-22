@@ -1,12 +1,9 @@
 package com.yashablendeer.carhire.controller;
 
-import com.yashablendeer.carhire.config.SecurityUtil;
-import com.yashablendeer.carhire.model.Car;
-import com.yashablendeer.carhire.model.Order;
-import com.yashablendeer.carhire.model.Status;
-import com.yashablendeer.carhire.model.User;
+import com.yashablendeer.carhire.model.*;
 import com.yashablendeer.carhire.service.CarService;
 import com.yashablendeer.carhire.service.OrderService;
+import com.yashablendeer.carhire.service.RepairService;
 import com.yashablendeer.carhire.service.UserService;
 import com.yashablendeer.carhire.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Controller
 public class PagesController {
@@ -33,6 +28,9 @@ public class PagesController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private RepairService repairService;
 
 
     @GetMapping(value="/insides/home")
@@ -233,16 +231,38 @@ public class PagesController {
     }
 
 
-    @RequestMapping(value = "carReturnPage/{id}", method = RequestMethod.GET)
-    public ModelAndView returnCar(@PathVariable(name = "id") int id) {
+    @RequestMapping(value = "carRepairPage/{id}", method = RequestMethod.GET)
+    public ModelAndView repairCar(@PathVariable(name = "id") int id) {
         ModelAndView modelAndView = new ModelAndView();
 
         Order currentOrder = orderService.findOrderById(id);
+        Car currentCar = carService.findCarById(currentOrder.getCar().getId());
+        Repair repair = new Repair();
         modelAndView.addObject("currentOrder", currentOrder);
+        modelAndView.addObject("currentCar", currentCar);
+        modelAndView.addObject("repair", repair);
 
-        modelAndView.setViewName("carReturnPage");
+        modelAndView.setViewName("carRepairPage");
         return modelAndView;
     }
 
+    @RequestMapping(path = "carRepairPage/{id}", method = RequestMethod.POST)
+    public ModelAndView carRepairHandler(@Valid Repair repair, BindingResult bindingResult,
+                                         @PathVariable("id") Integer id,
+                                         RedirectAttributes redirectAttrs) {
+        ModelAndView modelAndView = new ModelAndView();
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("carRepairPage");
+        } else {
+            carService.repairHandler(orderService.findOrderById(id).getCar().getId());
+            repair.setOrder(orderService.findOrderById(id));
+            repair.setPayStatus(Status.UNPAYED);
+            repairService.save(repair);
+            redirectAttrs.addAttribute("id", id).addFlashAttribute("successMessage", "Car has been updated successfully");
+            modelAndView.addObject("car", new Car());
+            modelAndView.setViewName("redirect:{id}");
+        }
+        return modelAndView;
+    }
 
 }
