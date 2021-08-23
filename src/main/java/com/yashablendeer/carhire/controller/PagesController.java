@@ -50,13 +50,8 @@ public class PagesController {
         modelAndView.addObject("repairsList", repairService.findAllrepairs());
 
 
-//        String currentLang = LocaleContextHolder.getLocale().equals(Locale.ENGLISH) ? "en": "ua";
         String currentLang = LocaleContextHolder.getLocale() == Locale.forLanguageTag("ua") ? "uk" : "ua";
         modelAndView.addObject("currentLang", currentLang);
-        System.out.println("===================");
-        System.out.println(LocaleContextHolder.getLocale());
-        System.out.println(currentLang);
-        System.out.println("===================");
 
         modelAndView.setViewName("insides/home");
         return modelAndView;

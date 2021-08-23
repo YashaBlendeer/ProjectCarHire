@@ -148,7 +148,8 @@
                                    th:utext="#{common.text.orderPay}"
                                    th:href="@{/payOrder(orderId=${order.id})}"
                                    th:classappend="${order.payStatus.name()} == 'PAYED' or
-                                   ${order.status.name()} == 'WAITING' ? disabled : active"
+                                   ${order.status.name()} == 'WAITING' or
+                                   ${order.status.name()} == 'REJECTED'? disabled : active"
                                    class="btn btn-danger"></a>
                             </td>
 
@@ -170,16 +171,16 @@
 
 
 
-                            <td sec:authorize="hasAuthority('MANAGER')" th:if="${order.status.name()} != 'FINISHED'">
+                            <td sec:authorize="hasAuthority('MANAGER')">
                                 <a th:utext="#{common.text.orderAccept}"
                                    th:href="@{/acceptOrder(orderId=${order.id})}"
                                    th:classappend="${order.status.name()} == 'ACCEPTED' or
-                                   ${order.status.name()} == 'REJECTED'? disabled : active"
+                                   ${order.status.name()} == 'REJECTED' or
+                                   ${order.status.name()} == 'FINISHED'? disabled : active"
                                    class="btn btn-danger"></a>
                             </td>
 
-                            <td sec:authorize="hasAuthority('MANAGER')"
-                                th:if="${order.status.name()} == 'ACCEPTED' and ${order.payStatus.name()} == 'PAYED'">
+                            <td sec:authorize="hasAuthority('MANAGER')">
                                 <a th:utext="#{common.text.orderReject}"
                                    th:href="@{'/carRejectPage/' + ${order.id}}"
                                    th:value="${order.id}"

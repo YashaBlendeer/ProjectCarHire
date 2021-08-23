@@ -48,6 +48,7 @@
             <td sec:authorize="hasAuthority('USER')">
                 <a th:text="#{common.text.order}"
                    th:href="@{'carOrderPage/' + ${car.id}}"
+                   th:classappend="${car.status.name()} == 'REPAIR' ? disabled : active"
                    class="btn btn-primary"></a></td>
         </tr>
         </tbody>

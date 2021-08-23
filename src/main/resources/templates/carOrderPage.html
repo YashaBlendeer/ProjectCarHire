@@ -48,7 +48,7 @@
                         <label th:if="${#fields.hasErrors('passport')}" th:errors="*{passport}"
                                class="validation-message"></label>
                         <input th:field="*{passport}"
-                               placeholder="Passport" class="form-control"/>
+                               placeholder="Passport" class="form-control" required/>
                     </div>
                 </div>
 
@@ -70,20 +70,23 @@
 <!--                TODO add th:error for dates-->
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <label for="startdatetime">Start date:</label>
+                        <span th:text="#{orderPage.text.start}"></span>
+                        <label th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}"
+                               class="validation-message" for="startdatetime">Start date:</label>
                         <input th:field="*{startTime}"
                                th:attr="min=${now}"
                                onchange="getStartTime()"
-                               id="startdatetime" type="datetime-local"  class="form-control">
+                               id="startdatetime" type="datetime-local"  class="form-control" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <label for="enddatetime">End date:</label>
+                        <span th:text="#{orderPage.text.end}"></span>
+                        <label th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}"
+                               class="validation-message" for="enddatetime" ></label>
                         <input th:field="*{endTime}"
-                               min="calcMinEndTime()"
-                               onchange="getEndTime()"
-                               id="enddatetime" type="datetime-local"  class="form-control">
+                               onchange="getEndTime(); calcMinEndTime()"
+                               id="enddatetime" type="datetime-local"  class="form-control" required>
                     </div>
                 </div>
 

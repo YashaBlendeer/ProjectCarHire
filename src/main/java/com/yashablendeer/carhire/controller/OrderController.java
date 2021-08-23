@@ -62,8 +62,16 @@ public class OrderController {
                                         @PathVariable("id") Integer carId,
                                         RedirectAttributes redirectAttrs) {
         ModelAndView modelAndView = new ModelAndView();
+
+        System.out.println("===============");
+        System.out.println(order);
+        System.out.println("===============");
+
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("carOrderPage");
+            System.out.println("===============");
+            System.out.println("bindingResult.hasErrors()");
+            System.out.println("===============");
         } else {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User user = userService.findUserByUserName(auth.getName());
