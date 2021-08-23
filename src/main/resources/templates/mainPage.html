@@ -24,6 +24,7 @@
         <th>Mark</th>
         <th>Quality</th>
         <th>Price</th>
+        <th>Status</th>
         <th sec:authorize="hasAuthority('ADMIN')">Update</th>
         <th sec:authorize="hasAuthority('ADMIN')">Delete</th>
         <th sec:authorize="hasAuthority('USER')">Order</th>
@@ -36,6 +37,7 @@
             <td th:text="${car.carMark}">mark</td>
             <td th:text="${car.carQuality}">qual</td>
             <td th:text="${car.carPrice}">price</td>
+            <td th:text="${car.status}">st</td>
             <td sec:authorize="hasAuthority('ADMIN')"><a th:text="#{common.text.update}"
                    th:href="@{'carUpdatePage/' + ${car.id}}"
                    class="btn btn-primary"></a></td>

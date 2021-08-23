@@ -11,7 +11,7 @@ import java.util.List;
 public interface RepairRepository extends JpaRepository<Repair, Long> {
     Repair findById(int id);
     List<Repair> findAll();
-
+    Repair findRepairByOrderId(int id);
     void deleteById(int id);
 
 }

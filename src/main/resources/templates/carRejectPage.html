@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Order Page</title>
+    <meta charset="ISO-8859-1" />
+    <link rel="stylesheet" type="text/css" th:href="@{../static/css/home.css}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+</head>
+<body>
+<div class="container">
+
+    <form autocomplete="off" th:action="@{'/carRejectPage/' + ${order.id}}"
+          th:object="${order}" method="post" class="form-horizontal"
+          role="form">
+
+        <label for="orderId">#</label>
+        <input type="text" class="form-control" id="orderId"
+               th:field="*{id}"
+               readonly>
+
+        <label for="orderCar">Car name</label>
+        <input type="text" class="form-control" id="orderCar"
+               th:field="*{car.carName}"
+               readonly>
+
+        <label for="orderCarMark">Car mark</label>
+        <input type="text" class="form-control" id="orderCarMark"
+               th:field="*{car.carMark}"
+               readonly>
+
+        <label for="orderPrice">Price</label>
+        <input type="text" class="form-control" id="orderPrice"
+               th:field="*{orderPrice}"
+               readonly>
+
+        <label for="withDriver">Driver</label>
+        <input type="text" class="form-control" id="withDriver"
+               th:value="*{withDriver} == true ? 'With driver' : 'Without driver'"
+               readonly>
+
+        <label for="startDate">Start date</label>
+        <input type="datetime-local" class="form-control" id="startDate"
+               th:field="*{startTime}"
+               readonly>
+
+        <label for="endDate">End date</label>
+        <input type="datetime-local" class="form-control" id="endDate"
+               th:field="*{endTime}"
+               readonly>
+
+        <label for="reason">Rejection reason</label>
+        <input type="text" class="form-control" id="reason"
+               th:field="*{description}">
+
+        <div class="form-group">
+            <div class="col-sm-9">
+                <button th:classappend="*{status} == 'REJECTED' ? disabled : active"
+                        type="submit"
+                        class="btn btn-primary btn-block">Reject car</button>
+            </div>
+        </div>
+    </form>
+
+    <h2><span class="text-success" th:utext="${successMessage}"></span></h2>
+    <a th:href="@{/insides/home}" class="btn btn-success">Home Page</a>
+
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+</body>
+</html>

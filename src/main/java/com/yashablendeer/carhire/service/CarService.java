@@ -48,7 +48,7 @@ public class CarService {
         fromDb.setCarName(car.getCarName());
         fromDb.setCarMark(car.getCarMark());
         fromDb.setCarQuality(car.getCarQuality());
-        fromDb.setStatus(Status.READY);
+        fromDb.setStatus(car.getStatus());
         fromDb.setCarPrice(car.getCarPrice());
 
         return carRepository.save(fromDb);

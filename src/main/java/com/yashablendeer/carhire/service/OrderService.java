@@ -28,6 +28,14 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    //TODO builder?
+    public Order rejectOrder (int id, String reason) {
+        Order order = orderRepository.findById(id);
+        order.setDescription(reason);
+        order.setStatus(Status.REJECTED);
+        return orderRepository.save(order);
+    }
+
     public Order saveBuilder (Order order, Car car, User user) {
 
         //TODO check for null?

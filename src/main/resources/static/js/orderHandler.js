@@ -51,11 +51,10 @@ function calcPrice() {
 
 
 
-// function calcMinEndTime() {
-//     let minEndTime;
-//     minEndTime = getStartTime();
-//     minEndTime.setHours(minEndTime.getHours() + 1);
-//     console.log('calcMinEndTime: ' + minEndTime);
-//     return minEndTime;
-// }
+function calcMinEndTime() {
+    let minEndTime = getStartTime();
+    minEndTime.setHours(minEndTime.getHours() + 1);
+    console.log('calcMinEndTime: ' + minEndTime);
+    return minEndTime;
+}
 

@@ -7,6 +7,8 @@ import com.yashablendeer.carhire.service.RepairService;
 import com.yashablendeer.carhire.service.UserService;
 import com.yashablendeer.carhire.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 @Controller
 public class PagesController {
@@ -44,6 +47,17 @@ public class PagesController {
         modelAndView.addObject("showUserNames", "Users' names: " + userService.findAllUsersByName());
         modelAndView.addObject("showUsers", userService.findAllUsers());
         modelAndView.addObject("ordersList", orderService.findAllOrders());
+        modelAndView.addObject("repairsList", repairService.findAllrepairs());
+
+
+//        String currentLang = LocaleContextHolder.getLocale().equals(Locale.ENGLISH) ? "en": "ua";
+        String currentLang = LocaleContextHolder.getLocale() == Locale.forLanguageTag("ua") ? "uk" : "ua";
+        modelAndView.addObject("currentLang", currentLang);
+        System.out.println("===================");
+        System.out.println(LocaleContextHolder.getLocale());
+        System.out.println(currentLang);
+        System.out.println("===================");
+
         modelAndView.setViewName("insides/home");
         return modelAndView;
     }
@@ -74,195 +88,6 @@ public class PagesController {
 
     }
 
-    @GetMapping(value="/carPage")
-    public ModelAndView addCar(){
-        ModelAndView modelAndView = new ModelAndView();
-        Car car = new Car();
-        modelAndView.addObject("car", car);
-        modelAndView.setViewName("carPage");
-        return modelAndView;
-    }
 
-    @PostMapping(value = "/carPage")
-    public ModelAndView createNewCar(@Valid Car car, BindingResult bindingResult) {
-        ModelAndView modelAndView = new ModelAndView();
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("carPage");
-        } else {
-            carService.saveCar(car);
-            modelAndView.addObject("successMessage", "Car has been registered successfully");
-            modelAndView.addObject("car", new Car());
-            modelAndView.setViewName("carPage");
-
-        }
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "mainPage/deleteCar", method = RequestMethod.GET)
-    public ModelAndView deleteCar(@RequestParam(name="carId")int carId) {
-        ModelAndView modelAndView = new ModelAndView();
-        carService.deleteCarById(carId);
-        //TODO add success message
-        modelAndView.setViewName("redirect:/mainPage");
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "carUpdatePage/{id}", method = RequestMethod.GET)
-    public ModelAndView editCar(@PathVariable(name = "id") int id) {
-        ModelAndView modelAndView = new ModelAndView();
-        Car car = carService.findCarById(id);
-        modelAndView.addObject("car", car);
-        modelAndView.setViewName("carUpdatePage");
-        return modelAndView;
-    }
-
-    @RequestMapping(path = "carUpdatePage/{id}", method = RequestMethod.POST)
-    public ModelAndView carUpdateHandler(@Valid Car car, BindingResult bindingResult, @PathVariable("id") Integer id,
-            RedirectAttributes redirectAttrs) {
-        ModelAndView modelAndView = new ModelAndView();
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("carUpdatePage");
-        } else {
-            carService.updateCar(car.getId(), car);
-            redirectAttrs.addAttribute("id", id).addFlashAttribute("successMessage", "Car has been updated successfully");
-            modelAndView.addObject("car", new Car());
-            modelAndView.setViewName("redirect:{id}");
-
-        }
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "carOrderPage/{id}", method = RequestMethod.GET)
-    public ModelAndView orderCar(@PathVariable(name = "id") int id) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findUserByUserName(auth.getName());
-        modelAndView.addObject("userName", user.getName() + " " + user.getLastName());
-
-        //time limiter
-        modelAndView.addObject("now", LocalDateTime.now().format(DateUtil.DTF));
-        modelAndView.addObject("then", LocalDateTime.now().plusHours(1).format(DateUtil.DTF));
-
-        Car car = carService.findCarById(id);
-        modelAndView.addObject("currentCar", car);
-        Order order =  new Order();
-
-        modelAndView.addObject("order",order);
-        modelAndView.setViewName("carOrderPage");
-        return modelAndView;
-    }
-
-    @RequestMapping(path = "carOrderPage/{id}", method = RequestMethod.POST)
-    public ModelAndView carOrderHandler(@Valid Order order, BindingResult bindingResult,
-                                        @PathVariable("id") Integer carId,
-                                        RedirectAttributes redirectAttrs) {
-        ModelAndView modelAndView = new ModelAndView();
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("carOrderPage");
-        } else {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            User user = userService.findUserByUserName(auth.getName());
-            Car car = carService.findCarById(carId);
-
-            orderService.saveBuilder(order, car, user);
-            redirectAttrs.addAttribute("id", carId).addFlashAttribute("successMessage", "Order was sent for " +
-                    "processing successfully");
-            modelAndView.addObject("car", new Car());
-            modelAndView.setViewName("redirect:{id}");
-
-        }
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/cancelOrder", method = RequestMethod.GET)
-    public ModelAndView cancelOrderHandler(@RequestParam(name="orderId")int orderId) {
-        ModelAndView modelAndView = new ModelAndView();
-        orderService.deleteOrderById(orderId);
-        modelAndView.setViewName("redirect:insides/home");
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/acceptOrder", method = RequestMethod.GET)
-    public ModelAndView acceptOrderHandler(@RequestParam(name="orderId")int orderId) {
-        ModelAndView modelAndView = new ModelAndView();
-        //TODO move from controller
-        Order order = orderService.findOrderById(orderId);
-        order.setStatus(Status.ACCEPTED);
-        orderService.save(order);
-        modelAndView.setViewName("redirect:insides/home");
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/rejectOrder", method = RequestMethod.GET)
-    public ModelAndView rejectOrderHandler(@RequestParam(name="orderId")int orderId) {
-        ModelAndView modelAndView = new ModelAndView();
-        //TODO move from controller
-        Order order = orderService.findOrderById(orderId);
-        order.setStatus(Status.REJECTED);
-        orderService.save(order);
-
-        modelAndView.addObject("rejectedOrder", new Order());
-        modelAndView.setViewName("redirect:insides/home");
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/payOrder", method = RequestMethod.GET)
-    public ModelAndView payOrderHandler(@RequestParam(name="orderId")int orderId) {
-        ModelAndView modelAndView = new ModelAndView();
-        //TODO move from controller
-        Order order = orderService.findOrderById(orderId);
-        order.setPayStatus(Status.PAYED);
-        orderService.save(order);
-        modelAndView.setViewName("redirect:insides/home");
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/finishOrder", method = RequestMethod.GET)
-    public ModelAndView finishOrderHandler(@RequestParam(name="orderId")int orderId) {
-        ModelAndView modelAndView = new ModelAndView();
-        //TODO move from controller
-        //TODO add price for car repair
-        Order order = orderService.findOrderById(orderId);
-        order.setStatus(Status.FINISHED);
-        orderService.save(order);
-        modelAndView.setViewName("redirect:insides/home");
-        return modelAndView;
-    }
-
-
-    @RequestMapping(value = "carRepairPage/{id}", method = RequestMethod.GET)
-    public ModelAndView repairCar(@PathVariable(name = "id") int id) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        Order currentOrder = orderService.findOrderById(id);
-        Car currentCar = carService.findCarById(currentOrder.getCar().getId());
-        Repair repair = new Repair();
-        modelAndView.addObject("currentOrder", currentOrder);
-        modelAndView.addObject("currentCar", currentCar);
-        modelAndView.addObject("repair", repair);
-
-        modelAndView.setViewName("carRepairPage");
-        return modelAndView;
-    }
-
-    @RequestMapping(path = "carRepairPage/{id}", method = RequestMethod.POST)
-    public ModelAndView carRepairHandler(@Valid Repair repair, BindingResult bindingResult,
-                                         @PathVariable("id") Integer id,
-                                         RedirectAttributes redirectAttrs) {
-        ModelAndView modelAndView = new ModelAndView();
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("carRepairPage");
-        } else {
-            carService.repairHandler(orderService.findOrderById(id).getCar().getId());
-            repair.setOrder(orderService.findOrderById(id));
-            repair.setPayStatus(Status.UNPAYED);
-            repairService.save(repair);
-            redirectAttrs.addAttribute("id", id).addFlashAttribute("successMessage", "Car has been updated successfully");
-            modelAndView.addObject("car", new Car());
-            modelAndView.setViewName("redirect:{id}");
-        }
-        return modelAndView;
-    }
 
 }

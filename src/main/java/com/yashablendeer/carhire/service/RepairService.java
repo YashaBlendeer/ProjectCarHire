@@ -26,4 +26,8 @@ public class RepairService {
     public Repair save(Repair repair) {
         return repairRepository.save(repair);
     }
+
+    public Repair findRepairByOrderId(int id) {
+        return repairRepository.findRepairByOrderId(id);
+    }
 }
