@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <title>Users Page</title>
+    <meta charset="ISO-8859-1" />
+    <link rel="stylesheet" type="text/css" th:href="@{../../static/css/home.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>-->
+</head>
+<body>
+<div sec:authorize="hasAuthority('ADMIN')">
+
+
+    <p>Hi, <span sec:authentication="name"></span>. You are authenticated as <span
+            sec:authentication="principal.authorities"></span> </p>
+    <a th:href="@{/insides/home}" class="btn btn-success"
+       sec:authorize="hasAuthority('ADMIN')">Home</a>
+<!--    <button type="button" th:action="@{/sortByName}"></button>-->
+    <div>
+        <table class="table table-hover">
+            <thead>
+            <th>ID</th>
+            <th>
+                <a th:href="@{'/insides/allUsers/page/' + ${currentPage} + '?sort-field=userName'}"
+                >Name</a>
+            </th>
+            <th>Last name</th>
+            <th>User name</th>
+            <th>Status</th>
+            <th>Action</th>
+            <th>Roles</th>
+            <th>Upgrade</th>
+            </thead>
+
+            <tbody th:each="user : ${showUsers}" >
+            <tr>
+                <td th:text="${user.id}">id</td>
+                <td th:text="${user.name}">name</td>
+                <td th:text="${user.lastName}">name</td>
+                <td th:text="${user.userName}">name</td>
+
+                <td th:text="${user.active} ? 'Active' : 'Banned'">status</td>
+                <td><a th:utext="${user.active} ? 'Ban' : 'Unban'"
+                       th:href="@{/ban_user(personId=${user.id}, sort-field=${sortField}, currentPage=${currentPage})}"
+                       th:each="role : ${user.getRoles}"
+                       th:classappend="${role.role} == 'ADMIN' ? disabled : active"
+                       class="btn btn-danger"></a></td>
+
+                <td th:each="role : ${user.getRoles}" th:text="${role.role}">role</td>
+                <td><a th:each="role : ${user.getRoles}"
+                       th:utext="${role.role} == 'MANAGER' ? 'Downgrade' : 'Upgrade'"
+                       th:href="@{/manager_handler(personId=${user.id}, sort-field=${sortField}, currentPage=${currentPage})}"
+                       th:classappend="${role.role} == 'ADMIN' ? disabled : active"
+                       class="btn btn-primary"></a></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!--                    pagination-->
+        <div class="row" th:fragment="pagination">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <nav aria-label="Pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:each="pageNumber : ${pageNumbers}" >
+                            <a class="page-link"
+                               th:href="@{'/insides/allUsers/page/' + ${pageNumber} + '?sort-field=' + ${sortField}}"
+
+                               th:text="${pageNumber}">1</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
