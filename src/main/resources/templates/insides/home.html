@@ -23,7 +23,9 @@
     </form>
     <a th:href="@{/mainPage}" class="btn btn-success">Main Page</a>
     <a th:href="@{/carAddPage}" class="btn btn-success" sec:authorize="hasAuthority('ADMIN')">Car Add Page</a>
-    <a th:href="@{/insides/allUsers/page/1}" class="btn btn-success" sec:authorize="hasAuthority('ADMIN')">All users</a>
+    <a th:href="@{/insides/allUsers/page/1?sort-field=id}" class="btn btn-success"
+       sec:authorize="hasAuthority('ADMIN')">All
+        users</a>
 
     <div class="btn-group">
         <a href="?lang=en" role="button">EN</a>

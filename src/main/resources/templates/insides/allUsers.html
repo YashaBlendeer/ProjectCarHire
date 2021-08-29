@@ -18,11 +18,15 @@
     <p>Hi, <span sec:authentication="name"></span>. You are authenticated as <span
             sec:authentication="principal.authorities"></span> </p>
 
+<!--    <button type="button" th:action="@{/sortByName}"></button>-->
     <div>
         <table class="table table-hover">
             <thead>
             <th>ID</th>
-            <th>Name</th>
+            <th>
+                <a th:href="@{'/insides/allUsers/page/' + ${currentPage} + '?sort-field=userName'}"
+                >Name</a>
+            </th>
             <th>Last name</th>
             <th>User name</th>
             <th>Status</th>
@@ -62,7 +66,8 @@
                 <nav aria-label="Pagination">
                     <ul class="pagination justify-content-center">
                         <li class="page-item" th:each="pageNumber : ${pageNumbers}" >
-                            <a class="page-link" th:href="@{|/insides/allUsers/page/${pageNumber}|}"
+                            <a class="page-link"
+                               th:href="@{'/insides/allUsers/page/' + ${pageNumber} + '?sort-field=' + ${sortField}}"
 
                                th:text="${pageNumber}">1</a>
                         </li>
@@ -71,6 +76,10 @@
             </div>
             <div class="col-md-2"></div>
         </div>
+
+<!--        <div th:each="pageNumber : ${pageNumbers}">-->
+<!--            <a class="ui-button" th:href="@{|/insides/allUsers/page/${pageNumber}(sort-field=userName)|}">sort</a>-->
+<!--        </div>-->
     </div>
 </div>
 

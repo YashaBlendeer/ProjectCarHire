@@ -46,18 +46,21 @@ public class PagesController {
     private RepairService repairService;
 
     @RequestMapping(value="/insides/allUsers/page/{page}")
-    public ModelAndView usersPaginated(@PathVariable("page") int page) {
+    public ModelAndView usersPaginated(@PathVariable("page") int page,
+                                       @RequestParam(required=false, name = "sort-field") final String sortField) {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        //pagination
 
 //        PageRequest pageable = PageRequest.of(page - 1, 2);
 //        Page<User> userPage = userService.findAllUsers(pageable);
 
-        Page<User> userPage = userService.findAllUsers(PageRequest.of(page - 1, 2, Sort.by(Sort.Direction.ASC, "userName")));
-//
-//        Pageable userPage =
-//                PageRequest.of(0, 3, Sort.by("userName").descending());
-
+        System.out.println("===================");
+        System.out.println(sortField);
+        System.out.println("===================");
+        Page<User> userPage = userService.findAllUsers(PageRequest.of(page - 1, 2, Sort.by(Sort.Direction.ASC,
+                sortField)));
         int totalPages = userPage.getTotalPages();
 
         if(totalPages > 0) {
@@ -65,12 +68,22 @@ public class PagesController {
             modelAndView.addObject("pageNumbers", pageNumbers);
         }
 
-        modelAndView.addObject("activeUserList", true);
+        modelAndView.addObject("currentPage", page);
+        modelAndView.addObject("sortField", sortField);
         modelAndView.addObject("showUsers", userPage.getContent());
         modelAndView.setViewName("insides/allUsers");
         return modelAndView;
 
     }
+
+//    @RequestMapping(value = "/sortByName", method = RequestMethod.GET)
+//    public ModelAndView sortByName() {
+//        ModelAndView modelAndView = new ModelAndView();
+//        userService.banHandler(personId);
+//        modelAndView.setViewName("redirect:insides/allUsers/page/1");
+//        return modelAndView;
+//    }
+
     @RequestMapping(value="/insides/home")
     public ModelAndView home(){
         ModelAndView modelAndView = new ModelAndView();
