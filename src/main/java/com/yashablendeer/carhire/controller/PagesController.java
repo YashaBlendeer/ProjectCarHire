@@ -76,20 +76,10 @@ public class PagesController {
 
     }
 
-//    @RequestMapping(value = "/sortByName", method = RequestMethod.GET)
-//    public ModelAndView sortByName() {
-//        ModelAndView modelAndView = new ModelAndView();
-//        userService.banHandler(personId);
-//        modelAndView.setViewName("redirect:insides/allUsers/page/1");
-//        return modelAndView;
-//    }
-
     @RequestMapping(value="/insides/home")
     public ModelAndView home(){
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-
 
         User user = userService.findUserByUserName(auth.getName());
         modelAndView.addObject("userName", "Welcome " + user.getUserName() + "/" + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
@@ -108,18 +98,22 @@ public class PagesController {
     }
 
     @RequestMapping(value = "/ban_user", method = RequestMethod.GET)
-    public ModelAndView handleBanUser(@RequestParam(name="personId")int personId) {
+    public ModelAndView handleBanUser(@RequestParam(name="personId")int personId,
+                                      @RequestParam(required=false, name = "sort-field") final String sortField,
+                                      @RequestParam(required=false, name = "currentPage") final String currentPage) {
         ModelAndView modelAndView = new ModelAndView();
         userService.banHandler(personId);
-        modelAndView.setViewName("redirect:insides/allUsers/page/1");
+        modelAndView.setViewName("redirect:insides/allUsers/page/" + currentPage + "?sort-field=" + sortField);
         return modelAndView;
     }
 
     @RequestMapping(value = "/manager_handler", method = RequestMethod.GET)
-    public ModelAndView managerHandler(@RequestParam(name="personId")int personId) {
+    public ModelAndView managerHandler(@RequestParam(name="personId")int personId,
+                                       @RequestParam(required=false, name = "sort-field") final String sortField,
+                                       @RequestParam(required=false, name = "currentPage") final String currentPage) {
         ModelAndView modelAndView = new ModelAndView();
         userService.managerUpgrade(personId);
-        modelAndView.setViewName("redirect:insides/allUsers/page/1");
+        modelAndView.setViewName("redirect:insides/allUsers/page/" + currentPage + "?sort-field=" + sortField);
         return modelAndView;
     }
 
