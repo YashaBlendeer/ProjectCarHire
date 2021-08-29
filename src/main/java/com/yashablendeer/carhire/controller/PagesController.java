@@ -43,9 +43,8 @@ public class PagesController {
     @Autowired
     private RepairService repairService;
 
-
-    @RequestMapping(value="/insides/home/page/{page}")
-    public ModelAndView home(@PathVariable("page") int page){
+    @RequestMapping(value="/insides/allUsers/page/{page}")
+    public ModelAndView usersPaginated(@PathVariable("page") int page) {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -60,6 +59,16 @@ public class PagesController {
 
         modelAndView.addObject("activeUserList", true);
         modelAndView.addObject("showUsers", userPage.getContent());
+        modelAndView.setViewName("insides/allUsers");
+        return modelAndView;
+
+    }
+    @RequestMapping(value="/insides/home")
+    public ModelAndView home(){
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+
 
         User user = userService.findUserByUserName(auth.getName());
         modelAndView.addObject("userName", "Welcome " + user.getUserName() + "/" + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
@@ -81,7 +90,7 @@ public class PagesController {
     public ModelAndView handleBanUser(@RequestParam(name="personId")int personId) {
         ModelAndView modelAndView = new ModelAndView();
         userService.banHandler(personId);
-        modelAndView.setViewName("redirect:insides/home");
+        modelAndView.setViewName("redirect:insides/allUsers/page/1");
         return modelAndView;
     }
 
@@ -89,7 +98,7 @@ public class PagesController {
     public ModelAndView managerHandler(@RequestParam(name="personId")int personId) {
         ModelAndView modelAndView = new ModelAndView();
         userService.managerUpgrade(personId);
-        modelAndView.setViewName("redirect:insides/home");
+        modelAndView.setViewName("redirect:insides/allUsers/page/1");
         return modelAndView;
     }
 

@@ -23,7 +23,7 @@
     </form>
     <a th:href="@{/mainPage}" class="btn btn-success">Main Page</a>
     <a th:href="@{/carAddPage}" class="btn btn-success" sec:authorize="hasAuthority('ADMIN')">Car Add Page</a>
-<!--    <a th:href="@{/allUsersPage}" class="btn btn-success" sec:authorize="hasAuthority('ADMIN')">All users</a>-->
+    <a th:href="@{/insides/allUsers/page/1}" class="btn btn-success" sec:authorize="hasAuthority('ADMIN')">All users</a>
 
     <div class="btn-group">
         <a href="?lang=en" role="button">EN</a>
@@ -37,68 +37,65 @@
                 <span th:utext="${userName}"></span>
             </div>
 
-<!--            <div th:if="${currentUser.active}  == false">-->
-<!--                <p class="message-text text-center" th:text="#{message.text.banned}"></p>-->
-<!--            </div>-->
 
-            <div class="message-text text-center" sec:authorize="hasAuthority('ADMIN')">
+<!--            <div class="message-text text-center" sec:authorize="hasAuthority('ADMIN')">-->
 
-                <p>Hi, <span sec:authentication="name"></span>. You are authenticated as <span
-                    sec:authentication="principal.authorities"></span> </p>
+<!--                <p>Hi, <span sec:authentication="name"></span>. You are authenticated as <span-->
+<!--                    sec:authentication="principal.authorities"></span> </p>-->
 
-                <div>
-                <table class="table table-hover">
-                    <thead>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Last name</th>
-                        <th>User name</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                        <th>Roles</th>
-                        <th>Upgrade</th>
-                    </thead>
+<!--                <div>-->
+<!--                <table class="table table-hover">-->
+<!--                    <thead>-->
+<!--                        <th>ID</th>-->
+<!--                        <th>Name</th>-->
+<!--                        <th>Last name</th>-->
+<!--                        <th>User name</th>-->
+<!--                        <th>Status</th>-->
+<!--                        <th>Action</th>-->
+<!--                        <th>Roles</th>-->
+<!--                        <th>Upgrade</th>-->
+<!--                    </thead>-->
 
-                    <tbody th:each="user : ${showUsers}" >
-                        <tr>
-                            <td th:text="${user.id}">id</td>
-                            <td th:text="${user.name}">name</td>
-                            <td th:text="${user.lastName}">name</td>
-                            <td th:text="${user.userName}">name</td>
+<!--                    <tbody th:each="user : ${showUsers}" >-->
+<!--                        <tr>-->
+<!--                            <td th:text="${user.id}">id</td>-->
+<!--                            <td th:text="${user.name}">name</td>-->
+<!--                            <td th:text="${user.lastName}">name</td>-->
+<!--                            <td th:text="${user.userName}">name</td>-->
 
-                            <td th:text="${user.active} ? 'Active' : 'Banned'">status</td>
-                            <td><a th:utext="${user.active} ? 'Ban' : 'Unban'"
-                                   th:href="@{/ban_user(personId=${user.id})}"
-                                   th:each="role : ${user.getRoles}"
-                                   th:classappend="${role.role} == 'ADMIN' ? disabled : active"
-                                   class="btn btn-danger"></a></td>
+<!--                            <td th:text="${user.active} ? 'Active' : 'Banned'">status</td>-->
+<!--                            <td><a th:utext="${user.active} ? 'Ban' : 'Unban'"-->
+<!--                                   th:href="@{/ban_user(personId=${user.id})}"-->
+<!--                                   th:each="role : ${user.getRoles}"-->
+<!--                                   th:classappend="${role.role} == 'ADMIN' ? disabled : active"-->
+<!--                                   class="btn btn-danger"></a></td>-->
 
-                            <td th:each="role : ${user.getRoles}" th:text="${role.role}">role</td>
-                            <td><a th:each="role : ${user.getRoles}"
-                                   th:utext="${role.role} == 'MANAGER' ? 'Downgrade' : 'Upgrade'"
-                                   th:href="@{/manager_handler(personId=${user.id})}"
-                                   th:classappend="${role.role} == 'ADMIN' ? disabled : active"
-                                   class="btn btn-primary"></a></td>
-                        </tr>
-                    </tbody>
-                </table>
+<!--                            <td th:each="role : ${user.getRoles}" th:text="${role.role}">role</td>-->
+<!--                            <td><a th:each="role : ${user.getRoles}"-->
+<!--                                   th:utext="${role.role} == 'MANAGER' ? 'Downgrade' : 'Upgrade'"-->
+<!--                                   th:href="@{/manager_handler(personId=${user.id})}"-->
+<!--                                   th:classappend="${role.role} == 'ADMIN' ? disabled : active"-->
+<!--                                   class="btn btn-primary"></a></td>-->
+<!--                        </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
 
-<!--                    pagination-->
-                    <div class="row" th:fragment="pagination">
-                        <div class="col-md-2"></div>
-                        <div class="col-md-8">
-                            <nav aria-label="Pagination">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item" th:each="pageNumber : ${pageNumbers}" >
-                                        <a class="page-link" th:href="@{|/insides/home/page/${pageNumber}|}"                                                                                        th:text="${pageNumber}">1</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                        <div class="col-md-2"></div>
-                    </div>
-                </div>
-        </div>
+<!--&lt;!&ndash;                    pagination&ndash;&gt;-->
+<!--                    <div class="row" th:fragment="pagination">-->
+<!--                        <div class="col-md-2"></div>-->
+<!--                        <div class="col-md-8">-->
+<!--                            <nav aria-label="Pagination">-->
+<!--                                <ul class="pagination justify-content-center">-->
+<!--                                    <li class="page-item" th:each="pageNumber : ${pageNumbers}" >-->
+<!--                                        <a class="page-link" th:href="@{|/insides/home/page/${pageNumber}|}"                                                                                        th:text="${pageNumber}">1</a>-->
+<!--                                    </li>-->
+<!--                                </ul>-->
+<!--                            </nav>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-2"></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--        </div>-->
 
 <!--            block for USER and MANAGER-->
             <div class="message-text text-center"  sec:authorize="hasAnyAuthority('USER', 'MANAGER')">
