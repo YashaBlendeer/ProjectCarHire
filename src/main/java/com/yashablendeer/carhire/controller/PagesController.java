@@ -9,6 +9,7 @@ import com.yashablendeer.carhire.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +22,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 public class PagesController {
@@ -40,27 +44,28 @@ public class PagesController {
     private RepairService repairService;
 
 
-    @GetMapping(value="/insides/home")
-    public ModelAndView home(HttpServletRequest request){
+    @RequestMapping(value="/insides/home/page/{page}")
+    public ModelAndView home(@PathVariable("page") int page){
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        //pagination
-        int page = 0; //default page number is 0
-        int size = 10; //default page size is 10
+        PageRequest pageable = PageRequest.of(page - 1, 2);
+        Page<User> userPage = userService.findAllUsers(pageable);
+        int totalPages = userPage.getTotalPages();
 
-        if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
-            page = Integer.parseInt(request.getParameter("page")) - 1;
+        if(totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1,totalPages).boxed().collect(Collectors.toList());
+            modelAndView.addObject("pageNumbers", pageNumbers);
         }
 
-        if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
-            size = Integer.parseInt(request.getParameter("size"));
-        }
+        modelAndView.addObject("activeUserList", true);
+        modelAndView.addObject("showUsers", userPage.getContent());
 
         User user = userService.findUserByUserName(auth.getName());
         modelAndView.addObject("userName", "Welcome " + user.getUserName() + "/" + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.addObject("currentUser", user);
-        modelAndView.addObject("showUsers", userService.findAllUsers(PageRequest.of(page, size)));
+//        modelAndView.addObject("showUserNames", "Users' names: " + userService.findAllUsersByName());
+//        modelAndView.addObject("showUsers", userService.findAllUsers());
         modelAndView.addObject("ordersList", orderService.findAllOrders());
         modelAndView.addObject("repairsList", repairService.findAllrepairs());
 
