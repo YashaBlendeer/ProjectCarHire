@@ -9,6 +9,7 @@ import com.yashablendeer.carhire.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -17,12 +18,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Locale;
 
 @Controller
 public class PagesController {
+
+//    TODO autowired through constructor
     @Autowired
     private UserService userService;
 
@@ -37,15 +41,26 @@ public class PagesController {
 
 
     @GetMapping(value="/insides/home")
-    public ModelAndView home(){
+    public ModelAndView home(HttpServletRequest request){
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        //pagination
+        int page = 0; //default page number is 0
+        int size = 10; //default page size is 10
+
+        if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
+            page = Integer.parseInt(request.getParameter("page")) - 1;
+        }
+
+        if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
+            size = Integer.parseInt(request.getParameter("size"));
+        }
 
         User user = userService.findUserByUserName(auth.getName());
         modelAndView.addObject("userName", "Welcome " + user.getUserName() + "/" + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.addObject("currentUser", user);
-        modelAndView.addObject("showUserNames", "Users' names: " + userService.findAllUsersByName());
-        modelAndView.addObject("showUsers", userService.findAllUsers());
+        modelAndView.addObject("showUsers", userService.findAllUsers(PageRequest.of(page, size)));
         modelAndView.addObject("ordersList", orderService.findAllOrders());
         modelAndView.addObject("repairsList", repairService.findAllrepairs());
 

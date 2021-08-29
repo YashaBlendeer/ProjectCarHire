@@ -5,11 +5,16 @@ import com.yashablendeer.carhire.model.Order;
 import com.yashablendeer.carhire.model.Status;
 import com.yashablendeer.carhire.model.User;
 import com.yashablendeer.carhire.repo.OrderRepository;
+import org.apache.el.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class OrderService {
@@ -28,7 +33,17 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    public List<Order> findAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    @Transactional
+    public void deleteOrderById(int id) {
+        orderRepository.deleteById(id);
+    }
+
     //TODO builder?
+    //TODO transactional?
     public Order rejectOrder (int id, String reason) {
         Order order = orderRepository.findById(id);
         order.setDescription(reason);
@@ -54,13 +69,43 @@ public class OrderService {
         );
     }
 
-    public List<Order> findAllOrders() {
-        return orderRepository.findAll();
+
+    public boolean checkDateAvailability(Car car, LocalDateTime start, LocalDateTime end) {
+//        TODO minimize code in checkDateAvailability
+        List<LocalDateTime> startDates = orderRepository.findAll().stream()
+                                                        .filter(order -> order.getCar().equals(car))
+                                                        .filter(order -> order.getStatus()
+                                                                        .equals(Status.ACCEPTED))
+                                                        .map(Order::getStartTime)
+                                                        .collect(Collectors.toList());
+        List<LocalDateTime> endDates = orderRepository.findAll().stream()
+                                                        .filter(order -> order.getCar().equals(car))
+                                                        .filter(order -> order.getStatus()
+                                                                .equals(Status.ACCEPTED))
+                                                        .map(Order::getEndTime)
+                                                        .collect(Collectors.toList());
+        Map<LocalDateTime, LocalDateTime> map = IntStream.range(0, startDates.size())
+                                                        .boxed()
+                                                        .collect(Collectors.toMap(
+                                                        i -> startDates.get(i), i -> endDates.get(i)));
+
+//        TODO why not ||
+        boolean notValidDate =
+                map.entrySet().stream()
+                        .anyMatch(entry -> entry.getKey().isBefore(end) && entry.getValue().isAfter(start));
+
+        System.out.println("===========");
+        System.out.println(car);
+        System.out.println("map" + map);
+        System.out.println("start: " + start);
+        System.out.println("end: " + end);
+        System.out.println("notValidDate: " + notValidDate);
+        System.out.println("===========");
+
+
+
+        return notValidDate;
     }
 
-    @Transactional
-    public void deleteOrderById(int id) {
-        orderRepository.deleteById(id);
-    }
 
 }

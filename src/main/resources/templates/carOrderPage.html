@@ -25,12 +25,12 @@
 <!--                TODO solve problem with setting order id automatically-->
 <!--                div to reset order id, which sets from PathVariable {id}-->
 <!--                it sets 0 instead of null?-->
-                <div hidden="hidden">
-                    <label for="orderId">id order:</label>
-                    <input type="text" class="form-control" id="orderId"
-                           th:field="*{id}"
-                           readonly>
-                </div>
+<!--                <div hidden="hidden">-->
+<!--                    <label for="orderId">id order:</label>-->
+<!--                    <input type="text" class="form-control" id="orderId"-->
+<!--                           th:field="*{id}"-->
+<!--                           readonly>-->
+<!--                </div>-->
 
 
                 <label for="carName">Ordered car:</label>
@@ -67,7 +67,6 @@
                 </div>
 
 
-<!--                TODO add th:error for dates-->
                 <div class="form-group">
                     <div class="col-sm-12">
                         <span th:text="#{orderPage.text.start}"></span>
@@ -89,6 +88,8 @@
                                id="enddatetime" type="datetime-local"  class="form-control" required>
                     </div>
                 </div>
+
+                <span class="validation-message" th:utext="${dateNotAvailableMessage}"></span>
 
                 <div class="form-group">
                     <div class="col-sm-12">

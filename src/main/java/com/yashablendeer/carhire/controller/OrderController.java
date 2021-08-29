@@ -24,6 +24,8 @@ import java.time.LocalDateTime;
 @Controller
 public class OrderController {
 
+//    TODO autowired through constructor
+
     @Autowired
     private UserService userService;
 
@@ -57,29 +59,40 @@ public class OrderController {
         return modelAndView;
     }
 
+
+//    TODO make code look better
     @RequestMapping(path = "carOrderPage/{id}", method = RequestMethod.POST)
     public ModelAndView carOrderHandler(@Valid Order order, BindingResult bindingResult,
                                         @PathVariable("id") Integer carId,
                                         RedirectAttributes redirectAttrs) {
         ModelAndView modelAndView = new ModelAndView();
 
+        boolean dateNotAvailable = orderService.checkDateAvailability(carService.findCarById(carId), order.getStartTime(), order.getEndTime());
+
         System.out.println("===============");
-        System.out.println(order);
+        System.out.println(dateNotAvailable);
         System.out.println("===============");
 
+        redirectAttrs.addAttribute("id", carId);
+        if (dateNotAvailable) {
+            bindingResult
+                    .rejectValue("startTime", "error.order",
+                            "This date is not available");
+            redirectAttrs.addFlashAttribute("dateNotAvailableMessage", "This date is not available");
+        }
+
         if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("carOrderPage");
-            System.out.println("===============");
-            System.out.println("bindingResult.hasErrors()");
-            System.out.println("===============");
+            modelAndView.setViewName("redirect:{id}");
         } else {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+//            TODO move user and car straight to orderService.saveBuilder?
             User user = userService.findUserByUserName(auth.getName());
             Car car = carService.findCarById(carId);
 
             orderService.saveBuilder(order, car, user);
-            redirectAttrs.addAttribute("id", carId).addFlashAttribute("successMessage", "Order was sent for " +
-                    "processing successfully");
+            redirectAttrs.addAttribute("id", carId).addFlashAttribute("successMessage",
+                                                    "Order was sent for processing successfully");
             modelAndView.addObject("car", new Car());
             modelAndView.setViewName("redirect:{id}");
 

@@ -38,15 +38,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         String loginPage = "/login";
         String logoutPage = "/logout";
 
+        //TODO check if anything works fine with ew permissions
         http.
                 authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers(loginPage).permitAll()
                 .antMatchers("/registration").permitAll()
                 .antMatchers("/mainPage").permitAll()
-                .antMatchers("/carPage").permitAll()
-                .antMatchers("/carUpdatePage").permitAll()
-                .antMatchers("/carOrderPage").permitAll()
+                .antMatchers("/carAddPage").hasAnyAuthority("ADMIN")
+                .antMatchers("/carUpdatePage").hasAnyAuthority("ADMIN")
+                .antMatchers("/carOrderPage").hasAnyAuthority("USER")
                 .antMatchers("/insides/**").hasAnyAuthority("ADMIN", "USER", "MANAGER")
                 .anyRequest()
                 .authenticated()
