@@ -10,27 +10,74 @@
     <link rel="stylesheet" type="text/css" th:href="@{../../static/css/home.css}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
 </head>
 
 <body>
-
-    <form th:action="@{/logout}" method="get">
-        <button class="btn btn-md btn-danger btn-block" name="registration"
-                type="Submit">Logout
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">CarHire</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
-    </form>
-    <a th:href="@{/mainPage}" class="btn btn-success">Main Page</a>
-    <a th:href="@{/carAddPage}" class="btn btn-success" sec:authorize="hasAuthority('ADMIN')">Car Add Page</a>
-    <a th:href="@{/insides/allUsers/page/1?sort-field=id}" class="btn btn-success"
-       sec:authorize="hasAuthority('ADMIN')">All
-        users</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/mainPage}" th:text="#{nav.buttons.mainPage}">Main
+                        page</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       th:href="@{/carAddPage}"
+                       sec:authorize="hasAuthority('ADMIN')">Add car</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       th:href="@{/insides/allUsers/page/1?sort-field=id}"
+                       sec:authorize="hasAuthority('ADMIN')">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       th:href="@{/insides/allOrders/page/1?sort-field=id}"
+                       sec:authorize="hasAnyAuthority('USER', 'MANAGER')">Orders</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Lang
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="?lang=en">EN</a></li>
+                        <li><a class="dropdown-item" href="?lang=ua">UA</a></li>
+                    </ul>
+                </li>
+            </ul>
 
-    <div class="btn-group">
-        <a href="?lang=en" role="button">EN</a>
-        <a href="?lang=ua" role="button">UA</a>
+            <form class="d-flex" th:action="@{/logout}" method="get">
+                <button class="btn btn-outline-danger" name="registration"
+                        type="Submit">Logout
+                </button>
+            </form>
+        </div>
     </div>
+</nav>
+
+
+<!--    <div  class="btn-group">-->
+<!--        <a href="?lang=en" role="button">EN</a>-->
+<!--        <a href="?lang=ua" role="button">UA</a>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--        <a th:href="@{/mainPage}" class="btn btn-success">Main Page</a>-->
+<!--        <a th:href="@{/carAddPage}" class="btn btn-success" sec:authorize="hasAuthority('ADMIN')">Add car</a>-->
+<!--        <a th:href="@{/insides/allUsers/page/1?sort-field=id}" class="btn btn-success"-->
+<!--           sec:authorize="hasAuthority('ADMIN')">All users</a>-->
+<!--        <a th:href="@{/insides/allUsers/page/1?sort-field=id}" class="btn btn-success"-->
+<!--           sec:authorize="hasAuthority('ADMIN')">See orders</a>-->
+<!--    </div>-->
+
+
+
 
 
     <div class="panel-group" style="margin-top:40px">
@@ -38,66 +85,6 @@
             <div class="panel-heading">
                 <span th:utext="${userName}"></span>
             </div>
-
-
-<!--            <div class="message-text text-center" sec:authorize="hasAuthority('ADMIN')">-->
-
-<!--                <p>Hi, <span sec:authentication="name"></span>. You are authenticated as <span-->
-<!--                    sec:authentication="principal.authorities"></span> </p>-->
-
-<!--                <div>-->
-<!--                <table class="table table-hover">-->
-<!--                    <thead>-->
-<!--                        <th>ID</th>-->
-<!--                        <th>Name</th>-->
-<!--                        <th>Last name</th>-->
-<!--                        <th>User name</th>-->
-<!--                        <th>Status</th>-->
-<!--                        <th>Action</th>-->
-<!--                        <th>Roles</th>-->
-<!--                        <th>Upgrade</th>-->
-<!--                    </thead>-->
-
-<!--                    <tbody th:each="user : ${showUsers}" >-->
-<!--                        <tr>-->
-<!--                            <td th:text="${user.id}">id</td>-->
-<!--                            <td th:text="${user.name}">name</td>-->
-<!--                            <td th:text="${user.lastName}">name</td>-->
-<!--                            <td th:text="${user.userName}">name</td>-->
-
-<!--                            <td th:text="${user.active} ? 'Active' : 'Banned'">status</td>-->
-<!--                            <td><a th:utext="${user.active} ? 'Ban' : 'Unban'"-->
-<!--                                   th:href="@{/ban_user(personId=${user.id})}"-->
-<!--                                   th:each="role : ${user.getRoles}"-->
-<!--                                   th:classappend="${role.role} == 'ADMIN' ? disabled : active"-->
-<!--                                   class="btn btn-danger"></a></td>-->
-
-<!--                            <td th:each="role : ${user.getRoles}" th:text="${role.role}">role</td>-->
-<!--                            <td><a th:each="role : ${user.getRoles}"-->
-<!--                                   th:utext="${role.role} == 'MANAGER' ? 'Downgrade' : 'Upgrade'"-->
-<!--                                   th:href="@{/manager_handler(personId=${user.id})}"-->
-<!--                                   th:classappend="${role.role} == 'ADMIN' ? disabled : active"-->
-<!--                                   class="btn btn-primary"></a></td>-->
-<!--                        </tr>-->
-<!--                    </tbody>-->
-<!--                </table>-->
-
-<!--&lt;!&ndash;                    pagination&ndash;&gt;-->
-<!--                    <div class="row" th:fragment="pagination">-->
-<!--                        <div class="col-md-2"></div>-->
-<!--                        <div class="col-md-8">-->
-<!--                            <nav aria-label="Pagination">-->
-<!--                                <ul class="pagination justify-content-center">-->
-<!--                                    <li class="page-item" th:each="pageNumber : ${pageNumbers}" >-->
-<!--                                        <a class="page-link" th:href="@{|/insides/home/page/${pageNumber}|}"                                                                                        th:text="${pageNumber}">1</a>-->
-<!--                                    </li>-->
-<!--                                </ul>-->
-<!--                            </nav>-->
-<!--                        </div>-->
-<!--                        <div class="col-md-2"></div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--        </div>-->
 
 <!--            block for USER and MANAGER-->
             <div class="message-text text-center"  sec:authorize="hasAnyAuthority('USER', 'MANAGER')">
@@ -236,8 +223,8 @@
         </div>
 </div>
 
-<script src="../../static/js/dateHandler.js"></script>
-<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>-->
+<!--<script src="../../static/js/dateHandler.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 </body>
 </html>
