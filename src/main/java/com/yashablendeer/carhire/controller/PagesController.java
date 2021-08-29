@@ -11,6 +11,8 @@ import org.springframework.cglib.core.Local;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -48,8 +50,14 @@ public class PagesController {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        PageRequest pageable = PageRequest.of(page - 1, 2);
-        Page<User> userPage = userService.findAllUsers(pageable);
+//        PageRequest pageable = PageRequest.of(page - 1, 2);
+//        Page<User> userPage = userService.findAllUsers(pageable);
+
+        Page<User> userPage = userService.findAllUsers(PageRequest.of(page - 1, 2, Sort.by(Sort.Direction.ASC, "userName")));
+//
+//        Pageable userPage =
+//                PageRequest.of(0, 3, Sort.by("userName").descending());
+
         int totalPages = userPage.getTotalPages();
 
         if(totalPages > 0) {

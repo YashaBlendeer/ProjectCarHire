@@ -5,10 +5,7 @@ import com.yashablendeer.carhire.model.User;
 import com.yashablendeer.carhire.repo.RoleRepository;
 import com.yashablendeer.carhire.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +48,13 @@ public class UserService {
         return userRepository.findAll().stream().map(x -> x.getName()).collect(Collectors.toList());
     }
 
+    //changes are here {Sort}
     public Page<User> findAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable);
+    }
+
+    public Page<User> findAllUsers(PageRequest page) {
+        return userRepository.findAll(page);
     }
 
     //TODO understand this method
@@ -90,4 +92,6 @@ public class UserService {
         user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
         return userRepository.save(user);
     }
+
+
 }
