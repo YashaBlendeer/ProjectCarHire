@@ -49,7 +49,7 @@ public class UserService {
         return userRepository.findAll().stream().map(x -> x.getName()).collect(Collectors.toList());
     }
 
-    public  List<User> findAllUsers(PageRequest of) {
+    public  List<User> findAllUsers() {
         return userRepository.findAll();
     }
 

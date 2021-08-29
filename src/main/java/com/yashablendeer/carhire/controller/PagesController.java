@@ -45,22 +45,10 @@ public class PagesController {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        //pagination
-        int page = 0; //default page number is 0
-        int size = 10; //default page size is 10
-
-        if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
-            page = Integer.parseInt(request.getParameter("page")) - 1;
-        }
-
-        if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
-            size = Integer.parseInt(request.getParameter("size"));
-        }
-
         User user = userService.findUserByUserName(auth.getName());
         modelAndView.addObject("userName", "Welcome " + user.getUserName() + "/" + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.addObject("currentUser", user);
-        modelAndView.addObject("showUsers", userService.findAllUsers(PageRequest.of(page, size)));
+        modelAndView.addObject("showUsers", userService.findAllUsers());
         modelAndView.addObject("ordersList", orderService.findAllOrders());
         modelAndView.addObject("repairsList", repairService.findAllrepairs());
 
