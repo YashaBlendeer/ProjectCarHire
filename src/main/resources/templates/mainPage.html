@@ -15,18 +15,44 @@
 
 </head>
 <body>
-<h1>Main page</h1>
-<a th:href="@{/insides/home}" class="btn btn-success">Home Page</a>
+<div th:insert="navbar.html :: navigation"></div>
 
-<form th:action="@{/findCar(sort-field=${sortField}, currentPage=${currentPage})}"
-      th:object="${keyword}" method="post"
-      class="d-flex">
-    <input th:field="*{message}" style="width: 200px" class="form-control me-2" type="search" placeholder="Quality"
-           aria-label="Quality">
-<!--    <a class="btn btn-outline-success"-->
-<!--       th:href="@{/findCar(keyword=${keyword}, sort-field=${sortField}, currentPage=${currentPage})}">Search</a>-->
-    <button type="submit">Search</button>
-</form>
+<!--<div>-->
+<!--    <div class="col" style="margin-top: 10px">-->
+<!--    <form autocomplete="off" th:action="@{/findCarByQuality(sort-field=${sortField}, currentPage=${currentPage})}"-->
+<!--          th:object="${keywordQuality}" method="post"-->
+<!--          class="d-flex">-->
+<!--        <input th:field="*{message}" style="width: 200px" class="form-control me-2" type="search" placeholder="Quality"-->
+<!--               aria-label="Quality">-->
+<!--        <button type="submit" class="btn btn-outline-success">Search</button>-->
+<!--    </form>-->
+<!--    </div>-->
+
+<!--    <div class="col" style="margin-top: 10px">-->
+<!--        <form autocomplete="off" th:action="@{/findCarByMark(sort-field=${sortField}, currentPage=${currentPage})}"-->
+<!--              th:object="${keywordMark}" method="post"-->
+<!--              class="d-flex">-->
+<!--            <input th:field="*{message}" style="width: 200px" class="form-control me-2" type="search" placeholder="Mark"-->
+<!--                   aria-label="Mark">-->
+<!--            <button type="submit" class="btn btn-outline-success">Search</button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
+
+<div class="col" style="margin-top: 10px">
+        <form autocomplete="off" th:action="@{/findCar(sort-field=${sortField}, currentPage=${currentPage})}"
+              th:object="${keyword}" method="post"
+              class="d-flex">
+            <input th:field="*{message}" style="width: 200px" class="form-control me-2" type="search"
+                   placeholder="Keyword"
+                   aria-label="Keyword">
+            <select class="form-select" style="width: 200px" th:field="*{field}">
+                <option th:value="'carQuality'" th:text="Quality"></option>
+                <option th:value="'carMark'" th:text="Mark"></option>
+            </select>
+            <button type="submit" class="btn btn-outline-success">Search</button>
+        </form>
+</div>
 
 <div>
     <table id="example" class="table table-hover">

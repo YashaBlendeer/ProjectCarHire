@@ -156,6 +156,7 @@ public class PagesController {
         modelAndView.addObject("sortField", sortField);
         modelAndView.addObject("showCars", carPage.getContent());
         modelAndView.addObject("keyword", new FormView());
+//        modelAndView.addObject("keywordMark", new FormView());
 
 
 
@@ -165,25 +166,28 @@ public class PagesController {
 
     }
 
+    //TODO solve problem with lang after searching
     @RequestMapping(value = "/findCar", method = RequestMethod.POST)
-    public ModelAndView findCar(@ModelAttribute(name="keyword")FormView keyword,
+    public ModelAndView findCarByQuality(@ModelAttribute(name = "keyword") FormView keyword, BindingResult bindingResult,
                                 @RequestParam(required=false, name = "sort-field") String sortField,
-                                @RequestParam(required=false, name = "currentPage") int currentPage){
+                                @RequestParam(required=false, name = "currentPage") int currentPage,
+                                @RequestParam(required=false, name = "lang") String lang){
         ModelAndView modelAndView = new ModelAndView();
 
+        System.out.println("===========");
+        System.out.println(keyword);
+        System.out.println("===========");
 //        TODO make sorting in search
-//        System.out.println("=========");
-//        System.out.println(sortField);
-//        System.out.println("=========");
         modelAndView.addObject("currentPage", currentPage);
         modelAndView.addObject("sortField", sortField);
-        modelAndView.addObject("showCars", keyword.getMessage() != "" ?
+
+        List<Car> foundCars = keyword.getField().equals("carQuality") ?
                 carService.findCarsByCarQuality(keyword.getMessage()) :
-                carService.findAllCars());
+                carService.findCarsByCarMark(keyword.getMessage());
+        modelAndView.addObject("showCars", foundCars);
 
 
         modelAndView.setViewName("mainPage");
             return modelAndView;
     }
-
 }
