@@ -7,6 +7,9 @@ import com.yashablendeer.carhire.model.User;
 import com.yashablendeer.carhire.repo.OrderRepository;
 import org.apache.el.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +38,14 @@ public class OrderService {
 
     public List<Order> findAllOrders() {
         return orderRepository.findAll();
+    }
+
+    public Page<Order> findAllOrdersByUserPageable(User user, PageRequest page) {
+        return orderRepository.findAllByUser(user, page);
+    }
+
+    public Page<Order> findAllOrdersPageable(PageRequest page) {
+        return orderRepository.findAll(page);
     }
 
     @Transactional
@@ -72,6 +83,11 @@ public class OrderService {
 
     public boolean checkDateAvailability(Car car, LocalDateTime start, LocalDateTime end) {
 //        TODO minimize code in checkDateAvailability
+
+        System.out.println("===============");
+        System.out.println("inside checkDateAvailability");
+        System.out.println(car);
+        System.out.println("===============");
         List<LocalDateTime> startDates = orderRepository.findAll().stream()
                                                         .filter(order -> order.getCar().equals(car))
                                                         .filter(order -> order.getStatus()
@@ -93,16 +109,6 @@ public class OrderService {
         boolean notValidDate =
                 map.entrySet().stream()
                         .anyMatch(entry -> entry.getKey().isBefore(end) && entry.getValue().isAfter(start));
-
-        System.out.println("===========");
-        System.out.println(car);
-        System.out.println("map" + map);
-        System.out.println("start: " + start);
-        System.out.println("end: " + end);
-        System.out.println("notValidDate: " + notValidDate);
-        System.out.println("===========");
-
-
 
         return notValidDate;
     }

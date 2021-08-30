@@ -11,19 +11,30 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 </head>
 <body>
 <h1>Main page</h1>
+<a th:href="@{/insides/home}" class="btn btn-success">Home Page</a>
+
+<form th:action="@{/findCar(sort-field=${sortField}, currentPage=${currentPage})}"
+      th:object="${keyword}" method="post"
+      class="d-flex">
+    <input th:field="*{message}" style="width: 200px" class="form-control me-2" type="search" placeholder="Quality"
+           aria-label="Quality">
+<!--    <a class="btn btn-outline-success"-->
+<!--       th:href="@{/findCar(keyword=${keyword}, sort-field=${sortField}, currentPage=${currentPage})}">Search</a>-->
+    <button type="submit">Search</button>
+</form>
+
 <div>
     <table id="example" class="table table-hover">
         <thead>
-        <th>Name</th>
+        <th><a th:href="@{'/mainPage/page/' + ${currentPage} + '?sort-field=carName'}">Name</a></th>
         <th>Mark</th>
         <th>Quality</th>
-        <th>Price</th>
+        <th><a th:href="@{'/mainPage/page/' + ${currentPage} + '?sort-field=carPrice'}">Price</a></th>
         <th>Status</th>
         <th sec:authorize="hasAuthority('ADMIN')">Update</th>
         <th sec:authorize="hasAuthority('ADMIN')">Delete</th>
@@ -39,22 +50,38 @@
             <td th:text="${car.carPrice}">price</td>
             <td th:text="${car.status}">st</td>
             <td sec:authorize="hasAuthority('ADMIN')"><a th:text="#{common.text.update}"
-                   th:href="@{'carUpdatePage/' + ${car.id}}"
+                   th:href="@{'/carUpdatePage/' + ${car.id}}"
                    class="btn btn-primary"></a></td>
             <td sec:authorize="hasAuthority('ADMIN')">
                     <a th:text="#{common.text.delete}"
-                   th:href="@{mainPage/deleteCar(carId=${car.id})}"
+                   th:href="@{/deleteCar(carId=${car.id}, sort-field=${sortField}, currentPage=${currentPage})}"
                    class="btn btn-danger"></a></td>
             <td sec:authorize="hasAuthority('USER')">
                 <a th:text="#{common.text.order}"
-                   th:href="@{'carOrderPage/' + ${car.id}}"
+                   th:href="@{'/carOrderPage/' + ${car.id}}"
                    th:classappend="${car.status.name()} == 'REPAIR' ? disabled : active"
                    class="btn btn-primary"></a></td>
         </tr>
         </tbody>
     </table>
 
-    <a th:href="@{/insides/home}" class="btn btn-success">Home Page</a>
+    <!--                    pagination-->
+    <div class="row" th:fragment="pagination">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:each="pageNumber : ${pageNumbers}" >
+                        <a class="page-link"
+                           th:href="@{'/mainPage/page/' + ${pageNumber} + '?sort-field=' + ${sortField}}"
+
+                           th:text="${pageNumber}">1</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
 
 </div>
 

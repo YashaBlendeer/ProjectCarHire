@@ -59,9 +59,9 @@
 
         <div class="form-group">
             <div class="col-sm-9">
-                <button th:classappend="*{status} == 'REJECTED' ? disabled : active"
+                <button th:classappend="*{status.name()} == 'REJECTED' ? disabled : active"
                         type="submit"
-                        class="btn btn-primary btn-block">Reject car</button>
+                        class="btn btn-primary btn-block">Reject order</button>
             </div>
         </div>
     </form>

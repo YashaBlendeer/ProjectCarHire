@@ -9,10 +9,7 @@ import com.yashablendeer.carhire.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -59,7 +56,7 @@ public class PagesController {
         System.out.println("===================");
         System.out.println(sortField);
         System.out.println("===================");
-        Page<User> userPage = userService.findAllUsers(PageRequest.of(page - 1, 2, Sort.by(Sort.Direction.ASC,
+        Page<User> userPage = userService.findAllUsersPageable(PageRequest.of(page - 1, 2, Sort.by(Sort.Direction.ASC,
                 sortField)));
         int totalPages = userPage.getTotalPages();
 
@@ -73,6 +70,38 @@ public class PagesController {
         modelAndView.addObject("showUsers", userPage.getContent());
         modelAndView.setViewName("insides/allUsers");
         return modelAndView;
+    }
+
+    @RequestMapping(value="/insides/allOrders/page/{page}")
+    public ModelAndView ordersPaginated(@PathVariable("page") int page) {
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+
+        //pagination
+
+        Page<Order> orderPage = auth.getAuthorities().stream()
+                                    .anyMatch(a -> a.getAuthority().equals("MANAGER")) ?
+                orderService.findAllOrdersPageable(PageRequest.of(page-1, 2)) :
+                orderService.findAllOrdersByUserPageable(user, PageRequest.of(page-1, 2));
+
+        int totalPages = orderPage.getTotalPages();
+
+        if(totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1,totalPages).boxed().collect(Collectors.toList());
+            modelAndView.addObject("pageNumbers", pageNumbers);
+        }
+
+        modelAndView.addObject("currentPage", page);
+        modelAndView.addObject("ordersList", orderPage.getContent());
+        modelAndView.addObject("currentUser", user);
+        modelAndView.addObject("repairsList", repairService.findAllrepairs());
+
+
+        String currentLang = LocaleContextHolder.getLocale() == Locale.forLanguageTag("ua") ? "uk" : "ua";
+        modelAndView.addObject("currentLang", currentLang);
+        modelAndView.setViewName("insides/allOrders");
+        return modelAndView;
 
     }
 
@@ -83,16 +112,6 @@ public class PagesController {
 
         User user = userService.findUserByUserName(auth.getName());
         modelAndView.addObject("userName", "Welcome " + user.getUserName() + "/" + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
-        modelAndView.addObject("currentUser", user);
-//        modelAndView.addObject("showUserNames", "Users' names: " + userService.findAllUsersByName());
-//        modelAndView.addObject("showUsers", userService.findAllUsers());
-        modelAndView.addObject("ordersList", orderService.findAllOrders());
-        modelAndView.addObject("repairsList", repairService.findAllrepairs());
-
-
-        String currentLang = LocaleContextHolder.getLocale() == Locale.forLanguageTag("ua") ? "uk" : "ua";
-        modelAndView.addObject("currentLang", currentLang);
-
         modelAndView.setViewName("insides/home");
         return modelAndView;
     }
@@ -117,16 +136,54 @@ public class PagesController {
         return modelAndView;
     }
 
-    @GetMapping(value="/mainPage")
-    public ModelAndView mainPage(){
+
+    @GetMapping(value="/mainPage/page/{page}")
+    public ModelAndView mainPage(@PathVariable("page") int page,
+                                 @RequestParam(required=false, name = "sort-field") final String sortField){
         ModelAndView modelAndView = new ModelAndView();
 
-        modelAndView.addObject("showCars", carService.findAllCars());
+        Page<Car> carPage = carService.findAllCarsPageable(PageRequest.of(page - 1, 2, Sort.by(Sort.Direction.ASC,
+                sortField)));
+        int totalPages = carPage.getTotalPages();
+
+        if(totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1,totalPages).boxed().collect(Collectors.toList());
+            modelAndView.addObject("pageNumbers", pageNumbers);
+        }
+
+
+        modelAndView.addObject("currentPage", page);
+        modelAndView.addObject("sortField", sortField);
+        modelAndView.addObject("showCars", carPage.getContent());
+        modelAndView.addObject("keyword", new FormView());
+
+
+
+//        modelAndView.addObject("showCars", carService.findAllCars());
         modelAndView.setViewName("mainPage");
         return modelAndView;
 
     }
 
+    @RequestMapping(value = "/findCar", method = RequestMethod.POST)
+    public ModelAndView findCar(@ModelAttribute(name="keyword")FormView keyword,
+                                @RequestParam(required=false, name = "sort-field") String sortField,
+                                @RequestParam(required=false, name = "currentPage") int currentPage){
+        ModelAndView modelAndView = new ModelAndView();
 
+//        TODO make sorting in search
+//        System.out.println("=========");
+//        System.out.println(sortField);
+//        System.out.println("=========");
+        modelAndView.addObject("currentPage", currentPage);
+        modelAndView.addObject("sortField", sortField);
+        modelAndView.addObject("showCars", keyword.getMessage() != "" ?
+                carService.findCarsByCarQuality(keyword.getMessage()) :
+                carService.findAllCars());
+
+
+        modelAndView.setViewName("mainPage");
+            return modelAndView;
+    }
 
 }

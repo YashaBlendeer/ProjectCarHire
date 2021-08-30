@@ -24,7 +24,7 @@ public class Car {
     private int id;
 
     @Column(name = "name")
-    @Length(min = 3, message = "*Car name must have at least 3 characters")
+    @Length(min = 1, message = "*Car name must have at least 1 character")
     @NotEmpty(message = "*Please provide a car name")
     private String carName;
 

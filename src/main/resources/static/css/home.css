@@ -8,11 +8,11 @@ message-text {
     align-content: center;
     text-align: center;
 }
-.table th {
-    text-align: center;
-    color: #e2e2e2;
-    background-color: #212121;
-}
+/*.table th {*/
+/*    text-align: center;*/
+/*    color: #e2e2e2;*/
+/*    background-color: #212121;*/
+/*}*/
 .styled-table {
     align-content: center;
     text-align: center;

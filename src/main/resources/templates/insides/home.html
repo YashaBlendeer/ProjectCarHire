@@ -24,7 +24,8 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" th:href="@{/mainPage}" th:text="#{nav.buttons.mainPage}">Main
+                    <a class="nav-link active" aria-current="page" th:href="@{/mainPage/page/1?sort-field=id}"
+                       th:text="#{nav.buttons.mainPage}">Main
                         page</a>
                 </li>
                 <li class="nav-item">
@@ -39,7 +40,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link"
-                       th:href="@{/insides/allOrders/page/1?sort-field=id}"
+                       th:href="@{/insides/allOrders/page/1}"
                        sec:authorize="hasAnyAuthority('USER', 'MANAGER')">Orders</a>
                 </li>
                 <li class="nav-item dropdown">
@@ -87,139 +88,139 @@
             </div>
 
 <!--            block for USER and MANAGER-->
-            <div class="message-text text-center"  sec:authorize="hasAnyAuthority('USER', 'MANAGER')">
-                 <table class="table table-hover">
-                        <thead>
-                        <th sec:authorize="hasAuthority('MANAGER')">#</th>
-                        <th>Car name</th>
-                        <th>Car status</th>
-                        <th>Price</th>
-                        <th>Start date</th>
-                        <th>End date</th>
-                        <th>Status</th>
-                        <th>Pay status</th>
-                        <th>Ordered by</th>
-                        <th>Order description</th>
-                        <th sec:authorize="hasAuthority('USER')">Cancel order</th>
-                        <th sec:authorize="hasAuthority('USER')">Pay for order</th>
-                        <th sec:authorize="hasAuthority('USER')">Pay for repair</th>
-<!--                        <th>Repair price</th>-->
-<!--                        <th>Repair status</th>-->
+<!--            <div class="message-text text-center"  sec:authorize="hasAnyAuthority('USER', 'MANAGER')">-->
+<!--                 <table class="table table-hover">-->
+<!--                        <thead>-->
+<!--                        <th sec:authorize="hasAuthority('MANAGER')">#</th>-->
+<!--                        <th>Car name</th>-->
+<!--                        <th>Car status</th>-->
+<!--                        <th>Price</th>-->
+<!--                        <th>Start date</th>-->
+<!--                        <th>End date</th>-->
+<!--                        <th>Status</th>-->
+<!--                        <th>Pay status</th>-->
+<!--                        <th>Ordered by</th>-->
+<!--                        <th>Order description</th>-->
+<!--                        <th sec:authorize="hasAuthority('USER')">Cancel order</th>-->
+<!--                        <th sec:authorize="hasAuthority('USER')">Pay for order</th>-->
+<!--                        <th sec:authorize="hasAuthority('USER')">Pay for repair</th>-->
+<!--&lt;!&ndash;                        <th>Repair price</th>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <th>Repair status</th>&ndash;&gt;-->
 
-                        <th sec:authorize="hasAuthority('MANAGER')">Accept order</th>
-                        <th sec:authorize="hasAuthority('MANAGER')">Reject order</th>
-                        <th sec:authorize="hasAuthority('MANAGER')">Register car repair</th>
-                        <th sec:authorize="hasAuthority('MANAGER')">Register car return</th>
-                        </thead>
+<!--                        <th sec:authorize="hasAuthority('MANAGER')">Accept order</th>-->
+<!--                        <th sec:authorize="hasAuthority('MANAGER')">Reject order</th>-->
+<!--                        <th sec:authorize="hasAuthority('MANAGER')">Register car repair</th>-->
+<!--                        <th sec:authorize="hasAuthority('MANAGER')">Register car return</th>-->
+<!--                        </thead>-->
 
-                        <tbody >
-                        <tr th:each="order : ${ordersList}"
-                            th:if="${currentUser} == ${order.user} or ${#authorization.expression('hasAuthority(''MANAGER'')')}">
-                            <td th:text="${order.id}"
-                                sec:authorize="hasAuthority('MANAGER')">name</td>
-                            <td th:text="${order.car.carName}">name</td>
-                            <td th:text="${order.car.status}">st</td>
-                            <td th:text="${order.orderPrice}">status</td>
+<!--                        <tbody >-->
+<!--                        <tr th:each="order : ${ordersList}"-->
+<!--                            th:if="${currentUser} == ${order.user} or ${#authorization.expression('hasAuthority(''MANAGER'')')}">-->
+<!--                            <td th:text="${order.id}"-->
+<!--                                sec:authorize="hasAuthority('MANAGER')">name</td>-->
+<!--                            <td th:text="${order.car.carName}">name</td>-->
+<!--                            <td th:text="${order.car.status}">st</td>-->
+<!--                            <td th:text="${order.orderPrice}">status</td>-->
 
-                            <td th:text="${#temporals.format(order.startTime,
-                                                            'dd-MMM-yyyy HH:mm',
-                                                            #locale.forLanguageTag(currentLang))}">date
-                            </td>
-                            <td
-                                    th:text="${#temporals.format(order.endTime,
-                                                                'dd-MMM-yyyy HH:mm',
-                                                                #locale.forLanguageTag(currentLang))}">date</td>
-
-
-                            <td th:text="${order.status}">status</td>
-                            <td th:text="${order.payStatus}">status</td>
-                            <td th:text="${order.user.name}">status</td>
-                            <td th:text="${order.description}">st</td>
-
-                            <td sec:authorize="hasAuthority('USER')">
-                                <a th:utext="#{common.text.orderCancel}"
-                                   th:href="@{/cancelOrder(orderId=${order.id})}"
-                                   th:classappend="${order.car.status.name()} == 'REPAIR' or
-                                   ${order.status.name()} == 'ACCEPTED'? disabled : active"
-                                   class="btn btn-danger"></a>
-                            </td>
-
-                            <td sec:authorize="hasAuthority('USER')">
-                                <a
-                                   th:utext="#{common.text.orderPay}"
-                                   th:href="@{/payOrder(orderId=${order.id})}"
-                                   th:classappend="${order.payStatus.name()} == 'PAYED' or
-                                   ${order.status.name()} == 'WAITING' or
-                                   ${order.status.name()} == 'REJECTED'? disabled : active"
-                                   class="btn btn-danger"></a>
-                            </td>
-
-                            <td sec:authorize="hasAuthority('USER')">
-                                <a
-                                        th:utext="#{common.text.orderPay}"
-                                        th:href="@{/payRepair(orderId=${order.id})}"
-                                        th:classappend="${order.car.status.name()} == 'REPAIR' ? active : disabled"
-                                        class="btn btn-danger"></a>
-                            </td>
-
-<!--                            TODO add repair status and price-->
-                            <!--                            repair pay-->
-                            <!--                            repair status-->
-
-<!--                            <td th:href="@{/payRepair(orderId=${order.id})}" th:value="${repairPrice}">price</td>-->
-<!--                            <td>st</td>-->
+<!--                            <td th:text="${#temporals.format(order.startTime,-->
+<!--                                                            'dd-MMM-yyyy HH:mm',-->
+<!--                                                            #locale.forLanguageTag(currentLang))}">date-->
+<!--                            </td>-->
+<!--                            <td-->
+<!--                                    th:text="${#temporals.format(order.endTime,-->
+<!--                                                                'dd-MMM-yyyy HH:mm',-->
+<!--                                                                #locale.forLanguageTag(currentLang))}">date</td>-->
 
 
+<!--                            <td th:text="${order.status}">status</td>-->
+<!--                            <td th:text="${order.payStatus}">status</td>-->
+<!--                            <td th:text="${order.user.name}">status</td>-->
+<!--                            <td th:text="${order.description}">st</td>-->
 
+<!--                            <td sec:authorize="hasAuthority('USER')">-->
+<!--                                <a th:utext="#{common.text.orderCancel}"-->
+<!--                                   th:href="@{/cancelOrder(orderId=${order.id})}"-->
+<!--                                   th:classappend="${order.car.status.name()} == 'REPAIR' or-->
+<!--                                   ${order.status.name()} == 'ACCEPTED'? disabled : active"-->
+<!--                                   class="btn btn-danger"></a>-->
+<!--                            </td>-->
 
-                            <td sec:authorize="hasAuthority('MANAGER')">
-                                <a th:utext="#{common.text.orderAccept}"
-                                   th:href="@{/acceptOrder(orderId=${order.id})}"
-                                   th:classappend="${order.status.name()} == 'ACCEPTED' or
-                                   ${order.status.name()} == 'REJECTED' or
-                                   ${order.status.name()} == 'FINISHED'? disabled : active"
-                                   class="btn btn-danger"></a>
-                            </td>
+<!--                            <td sec:authorize="hasAuthority('USER')">-->
+<!--                                <a-->
+<!--                                   th:utext="#{common.text.orderPay}"-->
+<!--                                   th:href="@{/payOrder(orderId=${order.id})}"-->
+<!--                                   th:classappend="${order.payStatus.name()} == 'PAYED' or-->
+<!--                                   ${order.status.name()} == 'WAITING' or-->
+<!--                                   ${order.status.name()} == 'REJECTED'? disabled : active"-->
+<!--                                   class="btn btn-danger"></a>-->
+<!--                            </td>-->
 
-                            <td sec:authorize="hasAuthority('MANAGER')">
-                                <a th:utext="#{common.text.orderReject}"
-                                   th:href="@{'/carRejectPage/' + ${order.id}}"
-                                   th:value="${order.id}"
-                                   th:classappend="${order.status.name()} != 'WAITING' ? disabled : active"
-                                   class="btn btn-danger"
-                                ></a>
-                            </td>
+<!--                            <td sec:authorize="hasAuthority('USER')">-->
+<!--                                <a-->
+<!--                                        th:utext="#{common.text.orderPay}"-->
+<!--                                        th:href="@{/payRepair(orderId=${order.id})}"-->
+<!--                                        th:classappend="${order.car.status.name()} == 'REPAIR' ? active : disabled"-->
+<!--                                        class="btn btn-danger"></a>-->
+<!--                            </td>-->
 
-                            <td sec:authorize="hasAuthority('MANAGER')"
-                                th:if="${order.status.name()} == 'ACCEPTED' and ${order.payStatus.name()} == 'PAYED'">
-                                <a th:utext="#{common.text.orderRepair}"
-                                   th:href="@{'/carRepairPage/' + ${order.id}}"
-                                   th:value="${order.id}"
-                                   th:classappend="${order.status.name()} == 'FINISHED' or
-                                   ${order.status.name()} == 'REJECTED' or
-                                   ${order.car.status.name()} == 'REPAIR'? disabled : active"
-                                   class="btn btn-danger"
-                                ></a>
-                            </td>
+<!--&lt;!&ndash;                            TODO add repair status and price&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            repair pay&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            repair status&ndash;&gt;-->
 
-<!--                           TODO set finished status in order-->
-                            <td sec:authorize="hasAuthority('MANAGER')"
-                                th:if="${order.status.name()} == 'ACCEPTED' and ${order.payStatus.name()} == 'PAYED'">
-                                <a th:utext="#{common.text.orderFinish}"
-                                   th:href="@{/finishOrder(orderId=${order.id})}"
-                                   th:classappend="${order.status.name()} == 'FINISHED' or
-                                   ${order.status.name()} == 'REJECTED' ? disabled : active"
-                                   class="btn btn-danger"
-                                ></a>
-                            </td>
+<!--&lt;!&ndash;                            <td th:href="@{/payRepair(orderId=${order.id})}" th:value="${repairPrice}">price</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <td>st</td>&ndash;&gt;-->
 
 
 
 
-                        </tr>
-                        </tbody>
-                    </table>
-            </div>
+<!--                            <td sec:authorize="hasAuthority('MANAGER')">-->
+<!--                                <a th:utext="#{common.text.orderAccept}"-->
+<!--                                   th:href="@{/acceptOrder(orderId=${order.id})}"-->
+<!--                                   th:classappend="${order.status.name()} == 'ACCEPTED' or-->
+<!--                                   ${order.status.name()} == 'REJECTED' or-->
+<!--                                   ${order.status.name()} == 'FINISHED'? disabled : active"-->
+<!--                                   class="btn btn-danger"></a>-->
+<!--                            </td>-->
+
+<!--                            <td sec:authorize="hasAuthority('MANAGER')">-->
+<!--                                <a th:utext="#{common.text.orderReject}"-->
+<!--                                   th:href="@{'/carRejectPage/' + ${order.id}}"-->
+<!--                                   th:value="${order.id}"-->
+<!--                                   th:classappend="${order.status.name()} != 'WAITING' ? disabled : active"-->
+<!--                                   class="btn btn-danger"-->
+<!--                                ></a>-->
+<!--                            </td>-->
+
+<!--                            <td sec:authorize="hasAuthority('MANAGER')"-->
+<!--                                th:if="${order.status.name()} == 'ACCEPTED' and ${order.payStatus.name()} == 'PAYED'">-->
+<!--                                <a th:utext="#{common.text.orderRepair}"-->
+<!--                                   th:href="@{'/carRepairPage/' + ${order.id}}"-->
+<!--                                   th:value="${order.id}"-->
+<!--                                   th:classappend="${order.status.name()} == 'FINISHED' or-->
+<!--                                   ${order.status.name()} == 'REJECTED' or-->
+<!--                                   ${order.car.status.name()} == 'REPAIR'? disabled : active"-->
+<!--                                   class="btn btn-danger"-->
+<!--                                ></a>-->
+<!--                            </td>-->
+
+<!--&lt;!&ndash;                           TODO set finished status in order&ndash;&gt;-->
+<!--                            <td sec:authorize="hasAuthority('MANAGER')"-->
+<!--                                th:if="${order.status.name()} == 'ACCEPTED' and ${order.payStatus.name()} == 'PAYED'">-->
+<!--                                <a th:utext="#{common.text.orderFinish}"-->
+<!--                                   th:href="@{/finishOrder(orderId=${order.id})}"-->
+<!--                                   th:classappend="${order.status.name()} == 'FINISHED' or-->
+<!--                                   ${order.status.name()} == 'REJECTED' ? disabled : active"-->
+<!--                                   class="btn btn-danger"-->
+<!--                                ></a>-->
+<!--                            </td>-->
+
+
+
+
+<!--                        </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--            </div>-->
         </div>
 </div>
 

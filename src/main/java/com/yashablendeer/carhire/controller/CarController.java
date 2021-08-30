@@ -54,12 +54,14 @@ public class CarController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "mainPage/deleteCar", method = RequestMethod.GET)
-    public ModelAndView deleteCar(@RequestParam(name="carId")int carId) {
+    @RequestMapping(value = "/deleteCar", method = RequestMethod.GET)
+    public ModelAndView deleteCar(@RequestParam(name="carId")int carId,
+                                  @RequestParam(required=false, name = "sort-field") final String sortField,
+                                  @RequestParam(required=false, name = "currentPage") final String currentPage) {
         ModelAndView modelAndView = new ModelAndView();
         carService.deleteCarById(carId);
         //TODO add success message
-        modelAndView.setViewName("redirect:/mainPage");
+        modelAndView.setViewName("redirect:/mainPage/page/" + currentPage + "?sort-field=" + sortField );
         return modelAndView;
     }
 

@@ -32,6 +32,8 @@ public class UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+
+
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
@@ -48,12 +50,16 @@ public class UserService {
         return userRepository.findAll().stream().map(x -> x.getName()).collect(Collectors.toList());
     }
 
-    //changes are here {Sort}
-    public Page<User> findAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable);
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 
-    public Page<User> findAllUsers(PageRequest page) {
+    //changes are here {Sort}
+//    public Page<User> findAllUsers(Pageable pageable) {
+//        return userRepository.findAll(pageable);
+//    }
+
+    public Page<User> findAllUsersPageable(PageRequest page) {
         return userRepository.findAll(page);
     }
 

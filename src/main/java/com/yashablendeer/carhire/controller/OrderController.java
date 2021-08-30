@@ -66,13 +66,16 @@ public class OrderController {
                                         @PathVariable("id") Integer carId,
                                         RedirectAttributes redirectAttrs) {
         ModelAndView modelAndView = new ModelAndView();
-
-        boolean dateNotAvailable = orderService.checkDateAvailability(carService.findCarById(carId), order.getStartTime(), order.getEndTime());
-
         System.out.println("===============");
-        System.out.println(dateNotAvailable);
+        System.out.println(carId);
         System.out.println("===============");
+//        boolean dateNotAvailable = orderService.checkDateAvailability(carService.findCarById(carId), order.getStartTime(), order.getEndTime());
+//
+//        System.out.println("===============");
+//        System.out.println(dateNotAvailable);
+//        System.out.println("===============");
 
+        boolean dateNotAvailable = false;
         redirectAttrs.addAttribute("id", carId);
         if (dateNotAvailable) {
             bindingResult
@@ -82,9 +85,16 @@ public class OrderController {
         }
 
         if (bindingResult.hasErrors()) {
+            System.out.println("===============");
+            System.out.println("bindingResult.hasErrors()");
+            System.out.println("===============");
+
             modelAndView.setViewName("redirect:{id}");
         } else {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            System.out.println("===============");
+            System.out.println("inside success block");
+            System.out.println("===============");
 
 //            TODO move user and car straight to orderService.saveBuilder?
             User user = userService.findUserByUserName(auth.getName());
@@ -101,21 +111,23 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/cancelOrder", method = RequestMethod.GET)
-    public ModelAndView cancelOrderHandler(@RequestParam(name="orderId")int orderId) {
+    public ModelAndView cancelOrderHandler(@RequestParam(name="orderId")int orderId,
+                                           @RequestParam(required=false, name = "currentPage") final String currentPage) {
         ModelAndView modelAndView = new ModelAndView();
         orderService.deleteOrderById(orderId);
-        modelAndView.setViewName("redirect:insides/home");
+        modelAndView.setViewName("redirect:insides/allOrders/page/" + currentPage);
         return modelAndView;
     }
 
     @RequestMapping(value = "/acceptOrder", method = RequestMethod.GET)
-    public ModelAndView acceptOrderHandler(@RequestParam(name="orderId")int orderId) {
+    public ModelAndView acceptOrderHandler(@RequestParam(name="orderId")int orderId,
+                                           @RequestParam(required=false, name = "currentPage") final String currentPage) {
         ModelAndView modelAndView = new ModelAndView();
         //TODO move from controller
         Order order = orderService.findOrderById(orderId);
         order.setStatus(Status.ACCEPTED);
         orderService.save(order);
-        modelAndView.setViewName("redirect:insides/home");
+        modelAndView.setViewName("redirect:insides/allOrders/page/" + currentPage);
         return modelAndView;
     }
 
@@ -133,37 +145,40 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/payOrder", method = RequestMethod.GET)
-    public ModelAndView payOrderHandler(@RequestParam(name="orderId")int orderId) {
+    public ModelAndView payOrderHandler(@RequestParam(name="orderId")int orderId,
+                                        @RequestParam(required=false, name = "currentPage") final String currentPage) {
         ModelAndView modelAndView = new ModelAndView();
         //TODO move from controller
         Order order = orderService.findOrderById(orderId);
         order.setPayStatus(Status.PAYED);
         orderService.save(order);
-        modelAndView.setViewName("redirect:insides/home");
+        modelAndView.setViewName("redirect:insides/allOrders/page/" + currentPage);
         return modelAndView;
     }
     @RequestMapping(value = "/payRepair", method = RequestMethod.GET)
-    public ModelAndView payRepairHandler(@RequestParam(name="orderId")int orderId) {
+    public ModelAndView payRepairHandler(@RequestParam(name="orderId")int orderId,
+                                         @RequestParam(required=false, name = "currentPage") final String currentPage) {
         ModelAndView modelAndView = new ModelAndView();
         //TODO move from controller
         Repair repair = repairService.findRepairByOrderId(orderId);
         repair.setPayStatus(Status.PAYED);
         repair.getOrder().getCar().setStatus(Status.READY);
         repairService.save(repair);
-        modelAndView.setViewName("redirect:insides/home");
+        modelAndView.setViewName("redirect:insides/allOrders/page/" + currentPage);
         return modelAndView;
     }
 
 
     @RequestMapping(value = "/finishOrder", method = RequestMethod.GET)
-    public ModelAndView finishOrderHandler(@RequestParam(name="orderId")int orderId) {
+    public ModelAndView finishOrderHandler(@RequestParam(name="orderId")int orderId,
+                                           @RequestParam(required=false, name = "currentPage") final String currentPage) {
         ModelAndView modelAndView = new ModelAndView();
         //TODO move from controller
         //TODO add price for car repair
         Order order = orderService.findOrderById(orderId);
         order.setStatus(Status.FINISHED);
         orderService.save(order);
-        modelAndView.setViewName("redirect:insides/home");
+        modelAndView.setViewName("redirect:insides/allOrders/page/" + currentPage);
         return modelAndView;
     }
 
@@ -195,7 +210,7 @@ public class OrderController {
             repair.setOrder(orderService.findOrderById(id));
             repair.setPayStatus(Status.UNPAYED);
             repairService.save(repair);
-            redirectAttrs.addAttribute("id", id).addFlashAttribute("successMessage", "Car has been updated successfully");
+            redirectAttrs.addAttribute("id", id).addFlashAttribute("successMessage", "Repair added successfully");
             modelAndView.addObject("car", new Car());
             modelAndView.setViewName("redirect:{id}");
         }

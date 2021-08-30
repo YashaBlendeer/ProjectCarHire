@@ -13,5 +13,6 @@ public interface RepairRepository extends JpaRepository<Repair, Long> {
     List<Repair> findAll();
     Repair findRepairByOrderId(int id);
     void deleteById(int id);
+    void deleteByOrderId(int id);
 
 }

@@ -1,33 +1,36 @@
 package com.yashablendeer.carhire.service;
 
-import com.yashablendeer.carhire.model.Car;
-import com.yashablendeer.carhire.model.Role;
-import com.yashablendeer.carhire.model.Status;
-import com.yashablendeer.carhire.model.User;
+import com.yashablendeer.carhire.model.*;
 import com.yashablendeer.carhire.repo.CarRepository;
+import com.yashablendeer.carhire.repo.OrderRepository;
+import com.yashablendeer.carhire.repo.RepairRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 @Service
 public class CarService {
     private CarRepository carRepository;
+    private OrderRepository orderRepository;
+    private RepairRepository repairRepository;
 
     @Autowired
-    public CarService(CarRepository carRepository) {
+    public CarService(CarRepository carRepository, OrderRepository orderRepository, RepairRepository repairRepository) {
         this.carRepository = carRepository;
+        this.orderRepository = orderRepository;
+        this.repairRepository = repairRepository;
     }
 
-    public Car findCarByCarMark(String carMark) {
-        return carRepository.findByCarMark(carMark);
+    public List<Car> findCarsByCarMark(String carMark) {
+        return carRepository.findAllByCarMark(carMark);
     }
 
-    public Car findCarByCarQuality(String carQuality) {
-        return carRepository.findByCarQuality(carQuality);
+    public List<Car> findCarsByCarQuality(String carQuality) {
+        return carRepository.findAllByCarQuality(carQuality);
     }
     public Car findCarById(int id) {
         return carRepository.findById(id);
@@ -35,6 +38,10 @@ public class CarService {
 
     public List<Car> findAllCars() {
         return carRepository.findAll();
+    }
+
+    public Page<Car> findAllCarsPageable(PageRequest page) {
+        return carRepository.findAll(page);
     }
 
     public Car saveCar(Car car) {
@@ -61,6 +68,9 @@ public class CarService {
     }
     @Transactional
     public void deleteCarById(int id) {
+        List<Order> toDelete = orderRepository.findAllByCarId(id);
+        toDelete.stream().map(Order::getId).forEach(idOrder -> repairRepository.deleteByOrderId(idOrder));
+        orderRepository.deleteByCarId(id);
         carRepository.deleteById(id);
     }
 }

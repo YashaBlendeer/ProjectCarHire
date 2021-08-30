@@ -1,10 +1,207 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Orders Page</title>
+    <meta charset="ISO-8859-1" />
+    <link rel="stylesheet" type="text/css" th:href="@{../../../static/css/home.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
+<!--<header th:insert="/fragments/navbar.html :: header"> </header>-->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/insides/home}">CarHire</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/mainPage/page/1?sort-field=id}"
+                       th:text="#{nav.buttons.mainPage}">Main
+                        page</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       th:href="@{/carAddPage}"
+                       sec:authorize="hasAuthority('ADMIN')">Add car</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       th:href="@{/insides/allUsers/page/1?sort-field=id}"
+                       sec:authorize="hasAuthority('ADMIN')">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       th:href="@{/insides/allOrders/page/1}"
+                       sec:authorize="hasAnyAuthority('USER', 'MANAGER')">Orders</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Lang
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="?lang=en">EN</a></li>
+                        <li><a class="dropdown-item" href="?lang=ua">UA</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <form class="d-flex" th:action="@{/logout}" method="get">
+                <button class="btn btn-outline-danger" name="registration"
+                        type="Submit">Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="message-text text-center"  sec:authorize="hasAnyAuthority('USER', 'MANAGER')">
+<!--    <a th:href="@{/insides/home}" class="btn btn-success">Home</a>-->
+
+    <table class="table table-hover">
+        <thead>
+        <th sec:authorize="hasAuthority('MANAGER')">#</th>
+        <th>Car name</th>
+        <th>Car status</th>
+        <th>Price</th>
+        <th>Start date</th>
+        <th>End date</th>
+        <th>Status</th>
+        <th>Pay status</th>
+        <th>Ordered by</th>
+        <th>Order rejection</th>
+
+        <th sec:authorize="hasAuthority('MANAGER')">Cancel order</th>
+        <th sec:authorize="hasAuthority('USER')">Pay for order</th>
+        <th sec:authorize="hasAuthority('USER')">Pay for repair</th>
+
+        <th sec:authorize="hasAuthority('MANAGER')">Accept order</th>
+        <th sec:authorize="hasAuthority('MANAGER')">Reject order</th>
+        <th sec:authorize="hasAuthority('MANAGER')">Register car repair</th>
+        <th sec:authorize="hasAuthority('MANAGER')">Register car return</th>
+        </thead>
+
+        <tbody >
+        <tr th:each="order : ${ordersList}"
+            th:if="${currentUser} == ${order.user} or ${#authorization.expression('hasAuthority(''MANAGER'')')}">
+            <td th:text="${order.id}"
+                sec:authorize="hasAuthority('MANAGER')">name</td>
+            <td th:text="${order.car.carName}">name</td>
+            <td th:text="${order.car.status}">st</td>
+            <td th:text="${order.orderPrice}">status</td>
+
+            <td th:text="${#temporals.format(order.startTime,
+                                                            'dd-MMM-yyyy HH:mm',
+                                                            #locale.forLanguageTag(currentLang))}">date
+            </td>
+            <td
+                    th:text="${#temporals.format(order.endTime,
+                                                                'dd-MMM-yyyy HH:mm',
+                                                                #locale.forLanguageTag(currentLang))}">date</td>
+
+
+            <td th:text="${order.status}">status</td>
+            <td th:text="${order.payStatus}">status</td>
+            <td th:text="${order.user.name}">status</td>
+            <td th:text="${order.description}">st</td>
+
+            <td sec:authorize="hasAnyAuthority('MANAGER')">
+                <a th:utext="#{common.text.orderCancel}"
+                   th:href="@{/cancelOrder(orderId=${order.id}, currentPage=${currentPage})}"
+                   th:classappend="${order.car.status.name()} == 'REPAIR' or
+                                   ${order.status.name()} == 'ACCEPTED'? disabled : active"
+                   class="btn btn-danger"></a>
+            </td>
+
+            <td sec:authorize="hasAuthority('USER')">
+                <a
+                        th:utext="#{common.text.orderPay}"
+                        th:href="@{/payOrder(orderId=${order.id}, currentPage=${currentPage})}"
+                        th:classappend="${order.payStatus.name()} == 'PAYED' or
+                                   ${order.status.name()} == 'WAITING' or
+                                   ${order.status.name()} == 'REJECTED'? disabled : active"
+                        class="btn btn-danger"></a>
+            </td>
+
+            <td sec:authorize="hasAuthority('USER')">
+                <a
+                        th:utext="#{common.text.orderPay}"
+                        th:href="@{/payRepair(orderId=${order.id}, currentPage=${currentPage})}"
+                        th:classappend="${order.car.status.name()} == 'REPAIR' ? active : disabled"
+                        class="btn btn-danger"></a>
+            </td>
+
+            <td sec:authorize="hasAuthority('MANAGER')">
+                <a th:utext="#{common.text.orderAccept}"
+                   th:href="@{/acceptOrder(orderId=${order.id}, currentPage=${currentPage})}"
+                   th:classappend="${order.status.name()} == 'ACCEPTED' or
+                                   ${order.status.name()} == 'REJECTED' or
+                                   ${order.status.name()} == 'FINISHED'? disabled : active"
+                   class="btn btn-danger"></a>
+            </td>
+
+            <td sec:authorize="hasAuthority('MANAGER')">
+                <a th:utext="#{common.text.orderReject}"
+                   th:href="@{'/carRejectPage/' + ${order.id}}"
+                   th:value="${order.id}"
+                   th:classappend="${order.status.name()} != 'WAITING' ? disabled : active"
+                   class="btn btn-danger"
+                ></a>
+            </td>
+
+            <td sec:authorize="hasAuthority('MANAGER')"
+                th:if="${order.status.name()} == 'ACCEPTED' and ${order.payStatus.name()} == 'PAYED'">
+                <a th:utext="#{common.text.orderRepair}"
+                   th:href="@{'/carRepairPage/' + ${order.id}}"
+                   th:value="${order.id}"
+                   th:classappend="${order.status.name()} == 'FINISHED' or
+                                   ${order.status.name()} == 'REJECTED' or
+                                   ${order.car.status.name()} == 'REPAIR'? disabled : active"
+                   class="btn btn-danger"
+                ></a>
+            </td>
+
+            <!--                           TODO set finished status in order-->
+            <td sec:authorize="hasAuthority('MANAGER')"
+                th:if="${order.status.name()} == 'ACCEPTED' and ${order.payStatus.name()} == 'PAYED'">
+                <a th:utext="#{common.text.orderFinish}"
+                   th:href="@{/finishOrder(orderId=${order.id}, currentPage=${currentPage})}"
+                   th:classappend="${order.status.name()} == 'FINISHED' or
+                                   ${order.status.name()} == 'REJECTED' ? disabled : active"
+                   class="btn btn-danger"
+                ></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!--                    pagination-->
+    <div class="row" th:fragment="pagination">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:each="pageNumber : ${pageNumbers}" >
+                        <a class="page-link"
+                           th:href="@{'/insides/allOrders/page/' + ${pageNumber}}"
+
+                           th:text="${pageNumber}">1</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+</div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
