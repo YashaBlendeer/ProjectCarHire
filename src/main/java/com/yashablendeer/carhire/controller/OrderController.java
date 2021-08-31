@@ -69,13 +69,13 @@ public class OrderController {
         System.out.println("===============");
         System.out.println(carId);
         System.out.println("===============");
-//        boolean dateNotAvailable = orderService.checkDateAvailability(carService.findCarById(carId), order.getStartTime(), order.getEndTime());
+        boolean dateNotAvailable = orderService.checkDateAvailability(carService.findCarById(carId), order.getStartTime(), order.getEndTime());
 //
 //        System.out.println("===============");
 //        System.out.println(dateNotAvailable);
 //        System.out.println("===============");
 
-        boolean dateNotAvailable = false;
+//        boolean dateNotAvailable = false;
         redirectAttrs.addAttribute("id", carId);
         if (dateNotAvailable) {
             bindingResult
