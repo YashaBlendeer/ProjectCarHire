@@ -17,28 +17,6 @@
 <body>
 <div th:insert="navbar.html :: navigation"></div>
 
-<!--<div>-->
-<!--    <div class="col" style="margin-top: 10px">-->
-<!--    <form autocomplete="off" th:action="@{/findCarByQuality(sort-field=${sortField}, currentPage=${currentPage})}"-->
-<!--          th:object="${keywordQuality}" method="post"-->
-<!--          class="d-flex">-->
-<!--        <input th:field="*{message}" style="width: 200px" class="form-control me-2" type="search" placeholder="Quality"-->
-<!--               aria-label="Quality">-->
-<!--        <button type="submit" class="btn btn-outline-success">Search</button>-->
-<!--    </form>-->
-<!--    </div>-->
-
-<!--    <div class="col" style="margin-top: 10px">-->
-<!--        <form autocomplete="off" th:action="@{/findCarByMark(sort-field=${sortField}, currentPage=${currentPage})}"-->
-<!--              th:object="${keywordMark}" method="post"-->
-<!--              class="d-flex">-->
-<!--            <input th:field="*{message}" style="width: 200px" class="form-control me-2" type="search" placeholder="Mark"-->
-<!--                   aria-label="Mark">-->
-<!--            <button type="submit" class="btn btn-outline-success">Search</button>-->
-<!--        </form>-->
-<!--    </div>-->
-<!--</div>-->
-
 <div class="col" style="margin-top: 10px">
         <form autocomplete="off" th:action="@{/findCar(sort-field=${sortField}, currentPage=${currentPage})}"
               th:object="${keyword}" method="post"

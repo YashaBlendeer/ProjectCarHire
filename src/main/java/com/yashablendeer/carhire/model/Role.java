@@ -7,6 +7,13 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * Role entity to determine user's rights
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
+
 @Data
 @Builder
 @AllArgsConstructor

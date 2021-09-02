@@ -10,6 +10,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Car entity
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -44,6 +51,5 @@ public class Car {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-//    @Value("READY")
     private Status status;
 }

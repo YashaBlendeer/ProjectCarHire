@@ -26,50 +26,34 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Controller for common pages
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
+
 @Controller
 public class PagesController {
 
-//    TODO autowired through constructor
-    @Autowired
     private UserService userService;
-
-    @Autowired
     private CarService carService;
-
-    @Autowired
     private OrderService orderService;
-
-    @Autowired
     private RepairService repairService;
 
-    @RequestMapping(value="/insides/allUsers/page/{page}")
-    public ModelAndView usersPaginated(@PathVariable("page") int page,
-                                       @RequestParam(required=false, name = "sort-field") final String sortField) {
-        ModelAndView modelAndView = new ModelAndView();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    /**
+     * Constructor to autowire
+     *
+     * @author yaroslava
+     * @version 1.0
+     */
 
-        //pagination
-
-//        PageRequest pageable = PageRequest.of(page - 1, 2);
-//        Page<User> userPage = userService.findAllUsers(pageable);
-
-        System.out.println("===================");
-        System.out.println(sortField);
-        System.out.println("===================");
-        Page<User> userPage = userService.findAllUsersPageable(PageRequest.of(page - 1, 2, Sort.by(Sort.Direction.ASC,
-                sortField)));
-        int totalPages = userPage.getTotalPages();
-
-        if(totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1,totalPages).boxed().collect(Collectors.toList());
-            modelAndView.addObject("pageNumbers", pageNumbers);
-        }
-
-        modelAndView.addObject("currentPage", page);
-        modelAndView.addObject("sortField", sortField);
-        modelAndView.addObject("showUsers", userPage.getContent());
-        modelAndView.setViewName("insides/allUsers");
-        return modelAndView;
+    @Autowired
+    public PagesController(UserService userService, CarService carService, OrderService orderService, RepairService repairService) {
+        this.userService = userService;
+        this.carService = carService;
+        this.orderService = orderService;
+        this.repairService = repairService;
     }
 
     @RequestMapping(value="/insides/allOrders/page/{page}")
@@ -116,27 +100,6 @@ public class PagesController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/ban_user", method = RequestMethod.GET)
-    public ModelAndView handleBanUser(@RequestParam(name="personId")int personId,
-                                      @RequestParam(required=false, name = "sort-field") final String sortField,
-                                      @RequestParam(required=false, name = "currentPage") final String currentPage) {
-        ModelAndView modelAndView = new ModelAndView();
-        userService.banHandler(personId);
-        modelAndView.setViewName("redirect:insides/allUsers/page/" + currentPage + "?sort-field=" + sortField);
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/manager_handler", method = RequestMethod.GET)
-    public ModelAndView managerHandler(@RequestParam(name="personId")int personId,
-                                       @RequestParam(required=false, name = "sort-field") final String sortField,
-                                       @RequestParam(required=false, name = "currentPage") final String currentPage) {
-        ModelAndView modelAndView = new ModelAndView();
-        userService.managerUpgrade(personId);
-        modelAndView.setViewName("redirect:insides/allUsers/page/" + currentPage + "?sort-field=" + sortField);
-        return modelAndView;
-    }
-
-
     @GetMapping(value="/mainPage/page/{page}")
     public ModelAndView mainPage(@PathVariable("page") int page,
                                  @RequestParam(required=false, name = "sort-field") final String sortField){
@@ -156,17 +119,11 @@ public class PagesController {
         modelAndView.addObject("sortField", sortField);
         modelAndView.addObject("showCars", carPage.getContent());
         modelAndView.addObject("keyword", new FormView());
-//        modelAndView.addObject("keywordMark", new FormView());
-
-
-
-//        modelAndView.addObject("showCars", carService.findAllCars());
         modelAndView.setViewName("mainPage");
         return modelAndView;
 
     }
 
-    //TODO solve problem with lang after searching
     @RequestMapping(value = "/findCar", method = RequestMethod.POST)
     public ModelAndView findCarByQuality(@ModelAttribute(name = "keyword") FormView keyword, BindingResult bindingResult,
                                 @RequestParam(required=false, name = "sort-field") String sortField,
@@ -174,10 +131,6 @@ public class PagesController {
                                 @RequestParam(required=false, name = "lang") String lang){
         ModelAndView modelAndView = new ModelAndView();
 
-        System.out.println("===========");
-        System.out.println(keyword);
-        System.out.println("===========");
-//        TODO make sorting in search
         modelAndView.addObject("currentPage", currentPage);
         modelAndView.addObject("sortField", sortField);
 

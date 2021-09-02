@@ -13,6 +13,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
+/**
+ * Controller for registration page
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
+
 @Controller
 @Log4j2
 public class RegistrationController {

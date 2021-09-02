@@ -9,15 +9,21 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository to access database, contains basic CRUD operations
+ *
+ * @author yaroslava
+ * @version 1.0
+ * @see com.yashablendeer.carhire.service.CarService
+ */
+
 @Repository
 public interface CarRepository  extends JpaRepository<Car, Long> {
     Car findById(int id);
     List<Car> findAllByCarMark(String carMark);
     List<Car> findAllByCarQuality(String carQuality);
 
-    //TODO upd car??
     void deleteById(int id);
     List<Car> findAll();
     Page<Car> findAll(Pageable pageable);
-
 }

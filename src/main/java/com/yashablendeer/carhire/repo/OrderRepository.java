@@ -10,6 +10,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository to access database, contains basic CRUD operations
+ *
+ * @author yaroslava
+ * @version 1.0
+ * @see com.yashablendeer.carhire.service.OrderService
+ */
+
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Order findById(int id);

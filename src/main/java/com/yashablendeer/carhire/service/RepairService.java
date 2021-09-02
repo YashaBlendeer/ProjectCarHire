@@ -7,6 +7,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Repair service
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
+
 @Service
 public class RepairService {
     RepairRepository repairRepository;

@@ -15,6 +15,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Service to build user for authentication
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
+
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
@@ -22,7 +29,7 @@ public class MyUserDetailsService implements UserDetailsService {
     private UserService userService;
 
     @Override
-    @Transactional //не работает без
+    @Transactional
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         User user = userService.findUserByUserName(userName);
         List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());

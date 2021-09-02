@@ -12,6 +12,13 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+/**
+ * Order entity, unidirectional connection with Car entity and User entity
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -54,16 +61,12 @@ public class Order {
     @NotNull
     private int orderPrice;
 
-    //TODO enumerated?
-    //TODO add default
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-//    @Value("WAITING")
     private Status status;
 
     @Column(name = "pay_status")
     @Enumerated(EnumType.STRING)
-//    @Value("UNPAYED")
     private Status payStatus;
 
     @Column(name = "description")

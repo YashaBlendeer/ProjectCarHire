@@ -12,6 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Car service
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
+
 @Service
 public class CarService {
     private CarRepository carRepository;
@@ -49,7 +56,6 @@ public class CarService {
         return carRepository.save(car);
     }
 
-    //TODO refactor Car builder
     public Car updateCar(Integer id, Car car) {
         Car fromDb = findCarById(id);
         fromDb.setCarName(car.getCarName());
@@ -61,11 +67,18 @@ public class CarService {
         return carRepository.save(fromDb);
     }
 
+    /**
+     * Sets status "REPAIR" for car
+     *
+     * @param id ID of car, which status will be changed
+     */
+
     public Car repairHandler(Integer id) {
         Car car =  carRepository.findById(id);
         car.setStatus(Status.REPAIR);
         return carRepository.save(car);
     }
+
     @Transactional
     public void deleteCarById(int id) {
         List<Order> toDelete = orderRepository.findAllByCarId(id);

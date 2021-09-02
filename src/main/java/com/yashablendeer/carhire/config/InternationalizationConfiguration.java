@@ -25,6 +25,13 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import java.util.Locale;
 
+/**
+ * Class to change locale
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
+
 @Configuration
 public class InternationalizationConfiguration implements WebMvcConfigurer {
     @Bean

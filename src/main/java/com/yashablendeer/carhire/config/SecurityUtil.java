@@ -4,9 +4,14 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class SecurityUtil {
+/**
+ * Util security class to define, if user is authenticated
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
 
-    //Utility methods
+public class SecurityUtil {
 
     public static boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -16,6 +21,4 @@ public class SecurityUtil {
         }
         return authentication.isAuthenticated();
     }
-
-    //??add private constructor??
 }

@@ -5,6 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * FormView entity, used for creating sorting requests
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
+
 @Data
 @Builder
 @AllArgsConstructor

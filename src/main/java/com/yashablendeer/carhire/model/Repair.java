@@ -8,6 +8,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Repair entity, unidirectional connection with Order
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
 
 @Data
 @Builder
@@ -32,6 +38,5 @@ public class Repair {
 
     @Column(name = "pay_status")
     @Enumerated(EnumType.STRING)
-//    @Value("UNPAYED")
     private Status payStatus;
 }

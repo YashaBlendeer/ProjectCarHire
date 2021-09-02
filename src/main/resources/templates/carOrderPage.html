@@ -22,17 +22,6 @@
                 <label for="userName">Ordered by:</label>
                 <input type="text" class="form-control" id="userName" th:value="${userName}" readonly>
 
-<!--                TODO solve problem with setting order id automatically-->
-<!--                div to reset order id, which sets from PathVariable {id}-->
-<!--                it sets 0 instead of null?-->
-<!--                <div hidden="hidden">-->
-<!--                    <label for="orderId">id order:</label>-->
-<!--                    <input type="text" class="form-control" id="orderId"-->
-<!--                           th:field="*{id}"-->
-<!--                           readonly>-->
-<!--                </div>-->
-
-
                 <label for="carName">Ordered car:</label>
                 <input type="text" class="form-control" id="carName"
                        th:value="${currentCar.carName}"

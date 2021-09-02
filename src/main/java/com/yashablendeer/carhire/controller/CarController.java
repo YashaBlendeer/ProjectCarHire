@@ -14,21 +14,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
+/**
+ * Controller for work with cars
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
+
 @Controller
 public class CarController {
 
-//    TODO autowired through constructor
-    @Autowired
-    private UserService userService;
-
     @Autowired
     private CarService carService;
-
-    @Autowired
-    private OrderService orderService;
-
-    @Autowired
-    private RepairService repairService;
 
     @GetMapping(value="/carAddPage")
     public ModelAndView addCar(){
@@ -60,7 +57,6 @@ public class CarController {
                                   @RequestParam(required=false, name = "currentPage") final String currentPage) {
         ModelAndView modelAndView = new ModelAndView();
         carService.deleteCarById(carId);
-        //TODO add success message
         modelAndView.setViewName("redirect:/mainPage/page/" + currentPage + "?sort-field=" + sortField );
         return modelAndView;
     }

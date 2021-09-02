@@ -7,6 +7,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository to access database, contains basic CRUD operations
+ *
+ * @author yaroslava
+ * @version 1.0
+ * @see com.yashablendeer.carhire.service.RepairService
+ */
+
 @Repository
 public interface RepairRepository extends JpaRepository<Repair, Long> {
     Repair findById(int id);

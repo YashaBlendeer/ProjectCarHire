@@ -12,8 +12,13 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+/**
+ * User service
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
 
 @Service
 public class UserService {
@@ -50,11 +55,6 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    //changes are here {Sort}
-//    public Page<User> findAllUsers(Pageable pageable) {
-//        return userRepository.findAll(pageable);
-//    }
-
     public Page<User> findAllUsersPageable(PageRequest page) {
         return userRepository.findAll(page);
     }
@@ -67,7 +67,14 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    //TODO refactor
+    /**
+     * Sets new user active status, depending on the previous one
+     * If user was banned, his status changes to active
+     * If user was active, his status changes to banned
+     *
+     * @param userId ID of user, which status will be changed
+     */
+
     public User banHandler(int userId) {
         User user = findUserByUserId(userId);
         if (user.getActive()) {
@@ -78,8 +85,14 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    //TODO refactor
-    public User managerUpgrade(int id) {
+    /**
+     * Sets a new role "MANAGER" or "USER" for user depending on the previous one
+     * If user has a role "MANAGER", his role changes to "USER"
+     * If user has a role "USER", his role changes to "MANAGER"
+     *
+     * @param id ID of user, which role will be changed
+     */
+    public User setManagerHandler(int id) {
         User user = findUserByUserId(id);
         Role managerRole = roleRepository.findByRole("MANAGER");
         boolean isManager = user.getRoles().contains(managerRole);

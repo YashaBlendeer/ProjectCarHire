@@ -19,6 +19,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Order service
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
+
 @Service
 public class OrderService {
     private OrderRepository orderRepository;
@@ -53,7 +60,7 @@ public class OrderService {
         orderRepository.deleteById(id);
     }
 
-    //TODO builder?
+
     //TODO transactional?
     public Order rejectOrder (int id, String reason) {
         Order order = orderRepository.findById(id);
@@ -80,14 +87,16 @@ public class OrderService {
         );
     }
 
+    /**
+     * Defines, if date range is available to order the specific car
+     *
+     * @param car Car which user wants to hire
+     * @param start The start date of hiring
+     * @param end The end date of hiring
+     */
 
     public boolean checkDateAvailability(Car car, LocalDateTime start, LocalDateTime end) {
-//        TODO minimize code in checkDateAvailability
 
-        System.out.println("===============");
-        System.out.println("inside checkDateAvailability");
-        System.out.println(car);
-        System.out.println("===============");
         List<LocalDateTime> startDates = orderRepository.findAll().stream()
                                                         .filter(order -> order.getCar().equals(car))
                                                         .filter(order -> order.getStatus()
@@ -105,7 +114,6 @@ public class OrderService {
                                                         .collect(Collectors.toMap(
                                                         i -> startDates.get(i), i -> endDates.get(i)));
 
-//        TODO why not ||
         boolean notValidDate =
                 map.entrySet().stream()
                         .anyMatch(entry -> entry.getKey().isBefore(end) && entry.getValue().isAfter(start));

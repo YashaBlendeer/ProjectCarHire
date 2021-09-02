@@ -21,10 +21,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 
+/**
+ * Controller for work with orders
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
+
 @Controller
 public class OrderController {
-
-//    TODO autowired through constructor
 
     @Autowired
     private UserService userService;
@@ -59,23 +64,14 @@ public class OrderController {
         return modelAndView;
     }
 
-
-//    TODO make code look better
     @RequestMapping(path = "carOrderPage/{id}", method = RequestMethod.POST)
     public ModelAndView carOrderHandler(@Valid Order order, BindingResult bindingResult,
                                         @PathVariable("id") Integer carId,
                                         RedirectAttributes redirectAttrs) {
         ModelAndView modelAndView = new ModelAndView();
-        System.out.println("===============");
-        System.out.println(carId);
-        System.out.println("===============");
-        boolean dateNotAvailable = orderService.checkDateAvailability(carService.findCarById(carId), order.getStartTime(), order.getEndTime());
-//
-//        System.out.println("===============");
-//        System.out.println(dateNotAvailable);
-//        System.out.println("===============");
 
-//        boolean dateNotAvailable = false;
+        boolean dateNotAvailable = orderService.checkDateAvailability(carService.findCarById(carId), order.getStartTime(), order.getEndTime());
+
         redirectAttrs.addAttribute("id", carId);
         if (dateNotAvailable) {
             bindingResult
@@ -85,18 +81,10 @@ public class OrderController {
         }
 
         if (bindingResult.hasErrors()) {
-            System.out.println("===============");
-            System.out.println("bindingResult.hasErrors()");
-            System.out.println("===============");
-
             modelAndView.setViewName("redirect:{id}");
         } else {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            System.out.println("===============");
-            System.out.println("inside success block");
-            System.out.println("===============");
 
-//            TODO move user and car straight to orderService.saveBuilder?
             User user = userService.findUserByUserName(auth.getName());
             Car car = carService.findCarById(carId);
 
@@ -174,7 +162,6 @@ public class OrderController {
                                            @RequestParam(required=false, name = "currentPage") final String currentPage) {
         ModelAndView modelAndView = new ModelAndView();
         //TODO move from controller
-        //TODO add price for car repair
         Order order = orderService.findOrderById(orderId);
         order.setStatus(Status.FINISHED);
         orderService.save(order);

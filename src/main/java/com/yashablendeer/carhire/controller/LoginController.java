@@ -15,12 +15,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
+/**
+ * Controller for login page
+ *
+ * @author yaroslava
+ * @version 1.0
+ */
+
 @Controller
 @Log4j2
 public class LoginController {
-
-    @Autowired
-    private UserService userService;
 
     @GetMapping(value={"/", "/login"})
     public ModelAndView login(){
