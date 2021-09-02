@@ -54,7 +54,7 @@ public class User {
     private Boolean active;
 
     @ManyToMany(cascade = CascadeType.MERGE)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 

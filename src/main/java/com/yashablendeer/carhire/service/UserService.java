@@ -46,10 +46,6 @@ public class UserService {
         return userRepository.findUserById(userId);
     }
 
-    public  List<String> findAllUsersByName() {
-        return userRepository.findAll().stream().map(x -> x.getName()).collect(Collectors.toList());
-    }
-
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
@@ -63,11 +59,10 @@ public class UserService {
         return userRepository.findAll(page);
     }
 
-    //TODO understand this method
     public User saveUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setActive(true);
-        Role userRole = roleRepository.findByRole("USER"); //???
+        Role userRole = roleRepository.findByRole("USER");
         user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
         return userRepository.save(user);
     }
@@ -80,7 +75,6 @@ public class UserService {
         } else {
             user.setActive(true);
         }
-
         return userRepository.save(user);
     }
 
@@ -98,6 +92,4 @@ public class UserService {
         user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
         return userRepository.save(user);
     }
-
-
 }
