@@ -59,13 +59,14 @@ public class CarService {
     }
 
     public Car updateCar(Integer id, Car car) {
-        Car fromDb = findCarById(id);
-        fromDb.setCarName(car.getCarName());
-        fromDb.setCarMark(car.getCarMark());
-        fromDb.setCarQuality(car.getCarQuality());
-        fromDb.setStatus(car.getStatus());
-        fromDb.setCarPrice(car.getCarPrice());
-
+        Car fromDb = Car.builder()
+                .id(id)
+                .carName(car.getCarName())
+                .carMark(car.getCarMark())
+                .carQuality(car.getCarQuality())
+                .carPrice(car.getCarPrice())
+                .status(car.getStatus())
+                .build();
         return carRepository.save(fromDb);
     }
 
