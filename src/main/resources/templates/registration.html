@@ -8,36 +8,22 @@
     <meta charset="ISO-8859-1" />
     <link rel="stylesheet" type="text/css" th:href="@{../static/css/registration.css}"/>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-<form th:action="@{/}" method="get">
-    <button class="btn btn-md btn-warning btn-block" type="Submit" th:text="#{login.gotologin}"></button>
-</form>
-
-
-<h1 th:text="#{greeting}"></h1>
-
-<div class="btn-group">
-    <a href="?lang=en" role="button">EN</a>
-    <a href="?lang=ua" role="button">UA</a>
-</div>
+<div th:insert="navbar.html :: navigation"> </div>
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
             <form autocomplete="off" action="#" th:action="@{/registration}"
-                  th:object="${user}" method="post" class="form-horizontal"
+                  th:object="${user}" method="post" class="form-signin"
                   role="form">
-                <h2 th:text="#{registration.text}"></h2>
 
                 <div class="form-group">
                     <div class="col-sm-9">
                         <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
                                class="validation-message"></label>
-                        <input type="text" th:field="*{name}" placeholder="Name"
+                        <input type="text" th:field="*{name}" th:placeholder="#{registration.text.name}"
                                class="form-control"/>
                     </div>
                 </div>
@@ -47,12 +33,12 @@
                         <label th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
                                class="validation-message"></label>
                         <input type="text" th:field="*{lastName}"
-                               placeholder="Last Name" class="form-control"/>
+                               th:placeholder="#{registration.text.lastname}" class="form-control"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <input type="text" th:field="*{email}" placeholder="Email"
+                        <input type="text" th:field="*{email}" th:placeholder="#{registration.text.email}"
                                class="form-control"/> <label
                             th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
                             class="validation-message"></label>
@@ -60,7 +46,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <input type="text" th:field="*{userName}" placeholder="User Name"
+                        <input type="text" th:field="*{userName}" th:placeholder="#{registration.text.username}"
                                class="form-control"/> <label
                             th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"
                             class="validation-message"></label>
@@ -69,7 +55,7 @@
                 <div class="form-group">
                     <div class="col-sm-9">
                         <input type="password" th:field="*{password}"
-                               placeholder="Password" class="form-control"/> <label
+                               th:placeholder="#{registration.text.pass}" class="form-control"/> <label
                             th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
                             class="validation-message"></label>
                     </div>
@@ -77,15 +63,20 @@
 
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <button type="submit" class="btn btn-primary btn-block">Register User</button>
+                        <button style="width: 200px"  type="submit" class="btn btn-primary btn-block"
+                                th:text="#{registration.text.register}"></button>
                     </div>
                 </div>
 
                 <h2><span class="text-success" th:utext="${successMessage}"></span></h2>
 
             </form>
-        </div>
-    </div>
+            <form th:action="@{/}" method="get">
+                <button style="width: 200px"  class="btn btn-md btn-warning btn-block" type="Submit"
+                        th:text="#{login.text.login}"></button>
+            </form>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -22,27 +22,30 @@
               th:object="${keyword}" method="post"
               class="d-flex">
             <input th:field="*{message}" style="width: 200px" class="form-control me-2" type="search"
-                   placeholder="Keyword"
+                   th:placeholder="#{mainPage.text.keyword}"
                    aria-label="Keyword">
             <select class="form-select" style="width: 200px" th:field="*{field}">
-                <option th:value="'carQuality'" th:text="Quality"></option>
-                <option th:value="'carMark'" th:text="Mark"></option>
+                <option th:value="'carQuality'" th:text="#{mainPage.text.quality}"></option>
+                <option th:value="'carMark'" th:text="#{mainPage.text.mark}"></option>
             </select>
-            <button type="submit" class="btn btn-outline-success">Search</button>
+            <button type="submit" class="btn btn-outline-success" th:text="#{common.text.search}"></button>
         </form>
 </div>
 
 <div>
     <table id="example" class="table table-hover">
         <thead>
-        <th><a th:href="@{'/mainPage/page/' + ${currentPage} + '?sort-field=carName'}">Name</a></th>
-        <th>Mark</th>
-        <th>Quality</th>
-        <th><a th:href="@{'/mainPage/page/' + ${currentPage} + '?sort-field=carPrice'}">Price</a></th>
-        <th>Status</th>
-        <th sec:authorize="hasAuthority('ADMIN')">Update</th>
-        <th sec:authorize="hasAuthority('ADMIN')">Delete</th>
-        <th sec:authorize="hasAuthority('USER')">Order</th>
+        <th th:text="#{mainPage.table.name}"><a th:href="@{'/mainPage/page/' + ${currentPage} + '?sort-field=carName'}">Name</a></th>
+        <th th:text="#{mainPage.table.mark}">Mark</th>
+        <th th:text="#{mainPage.table.quality}">Quality</th>
+        <th th:text="#{mainPage.table.price}"><a th:href="@{'/mainPage/page/' + ${currentPage} + '?sort-field=carPrice'}">Price</a></th>
+        <th th:text="#{mainPage.table.status}">Status</th>
+        <th sec:authorize="hasAuthority('ADMIN')"
+            th:text="#{common.text.update}">Update</th>
+        <th sec:authorize="hasAuthority('ADMIN')"
+            th:text="#{common.text.delete}">Delete</th>
+        <th sec:authorize="hasAuthority('USER')"
+            th:text="#{common.text.order}">Order</th>
         </thead>
 
         <tbody th:each="car : ${showCars}">
@@ -52,7 +55,9 @@
             <td th:text="${car.carMark}">mark</td>
             <td th:text="${car.carQuality}">qual</td>
             <td th:text="${car.carPrice}">price</td>
-            <td th:text="${car.status}">st</td>
+            <td th:text="${car.status.name()} == 'READY' ? #{mainPage.table.statusReady} :
+#{mainPage.table.statusRepair}"
+                >st</td>
             <td sec:authorize="hasAuthority('ADMIN')"><a th:text="#{common.text.update}"
                    th:href="@{'/carUpdatePage/' + ${car.id}}"
                    class="btn btn-primary"></a></td>

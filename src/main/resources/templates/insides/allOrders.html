@@ -20,24 +20,31 @@
     <table class="table table-hover">
         <thead>
         <th sec:authorize="hasAuthority('MANAGER')">#</th>
-        <th>Car name</th>
-        <th>Car status</th>
-        <th>Price</th>
-        <th>Start date</th>
-        <th>End date</th>
-        <th>Status</th>
-        <th>Pay status</th>
-        <th>Ordered by</th>
-        <th>Order rejection</th>
+        <th th:text="#{allOrders.table.carName}">Car name</th>
+        <th th:text="#{allOrders.table.carStatus}">Car status</th>
+        <th th:text="#{allOrders.table.price}">Price</th>
+        <th th:text="#{allOrders.table.starts}">Start date</th>
+        <th th:text="#{allOrders.table.ends}">End date</th>
+        <th th:text="#{allOrders.table.status}">Status</th>
+        <th th:text="#{allOrders.table.payStatus}">Pay status</th>
+        <th th:text="#{allOrders.table.orderedBy}">Ordered by</th>
+        <th th:text="#{allOrders.table.rejection}">Order rejection</th>
 
-        <th sec:authorize="hasAuthority('MANAGER')">Cancel order</th>
-        <th sec:authorize="hasAuthority('USER')">Pay for order</th>
-        <th sec:authorize="hasAuthority('USER')">Pay for repair</th>
+        <th sec:authorize="hasAuthority('MANAGER')"
+        th:text="#{common.text.orderCancel}">Cancel order</th>
+        <th sec:authorize="hasAuthority('USER')"
+            th:text="#{common.text.orderPay}">Pay for order</th>
+        <th sec:authorize="hasAuthority('USER')"
+            th:text="#{common.text.orderPay}">Pay for repair</th>
 
-        <th sec:authorize="hasAuthority('MANAGER')">Accept order</th>
-        <th sec:authorize="hasAuthority('MANAGER')">Reject order</th>
-        <th sec:authorize="hasAuthority('MANAGER')">Register car repair</th>
-        <th sec:authorize="hasAuthority('MANAGER')">Register car return</th>
+        <th sec:authorize="hasAuthority('MANAGER')"
+            th:text="#{allOrders.table.accept}">Accept order</th>
+        <th sec:authorize="hasAuthority('MANAGER')"
+            th:text="#{allOrders.table.reject}">Reject order</th>
+        <th sec:authorize="hasAuthority('MANAGER')"
+            th:text="#{allOrders.table.repair}">Register car repair</th>
+        <th sec:authorize="hasAuthority('MANAGER')"
+            th:text="#{allOrders.table.return}">Register car return</th>
         </thead>
 
         <tbody >

@@ -21,16 +21,15 @@
         <table class="table table-hover">
             <thead>
             <th>ID</th>
-            <th>
-                <a th:href="@{'/insides/allUsers/page/' + ${currentPage} + '?sort-field=userName'}"
-                >Name</a>
-            </th>
-            <th>Last name</th>
-            <th>User name</th>
-            <th>Status</th>
-            <th>Action</th>
-            <th>Roles</th>
-            <th>Upgrade</th>
+            <th><a th:href="@{'/insides/allUsers/page/' +
+                    ${currentPage} + '?sort-field=userName'}"
+            th:text="#{allUsers.table.name}">Name</a></th>
+            <th th:text="#{allUsers.table.lastName}">Last name</th>
+            <th th:text="#{allUsers.table.userName}">User name</th>
+            <th th:text="#{allUsers.table.status}">Status</th>
+            <th th:text="#{allUsers.table.action}">Action</th>
+            <th th:text="#{allUsers.table.roles}">Roles</th>
+            <th th:text="#{allUsers.table.upgrade}">Upgrade</th>
             </thead>
 
             <tbody th:each="user : ${showUsers}" >
@@ -41,7 +40,7 @@
                 <td th:text="${user.userName}">name</td>
 
                 <td th:text="${user.active} ? 'Active' : 'Banned'">status</td>
-                <td><a th:utext="${user.active} ? 'Ban' : 'Unban'"
+                <td><a th:utext="${user.active} ? #{allUsers.btn.ban} : #{allUsers.btn.unban}"
                        th:href="@{/ban_user(personId=${user.id}, sort-field=${sortField}, currentPage=${currentPage})}"
                        th:each="role : ${user.getRoles}"
                        th:classappend="${role.role} == 'ADMIN' ? disabled : active"
@@ -49,7 +48,7 @@
 
                 <td th:each="role : ${user.getRoles}" th:text="${role.role}">role</td>
                 <td><a th:each="role : ${user.getRoles}"
-                       th:utext="${role.role} == 'MANAGER' ? 'Downgrade' : 'Upgrade'"
+                       th:utext="${role.role} == 'MANAGER' ? #{allUsers.btn.upgrade} : #{allUsers.btn.downgrade}"
                        th:href="@{/manager_handler(personId=${user.id}, sort-field=${sortField}, currentPage=${currentPage})}"
                        th:classappend="${role.role} == 'ADMIN' ? disabled : active"
                        class="btn btn-primary"></a></td>

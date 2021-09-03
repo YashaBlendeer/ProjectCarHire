@@ -23,7 +23,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
+                    <li sec:authorize="isAuthenticated()" class="nav-item">
                         <a class="nav-link active" aria-current="page" th:href="@{/mainPage/page/1?sort-field=id}"
                            th:text="#{nav.buttons.mainPage}">Main
                             page</a>
@@ -31,21 +31,26 @@
                     <li class="nav-item">
                         <a class="nav-link"
                            th:href="@{/carAddPage}"
-                           sec:authorize="hasAuthority('ADMIN')">Add car</a>
+                           th:text="#{nav.buttons.addCar}"
+                           sec:authorize="hasAuthority('ADMIN')"></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
                            th:href="@{/insides/allUsers/page/1?sort-field=id}"
+                           th:text="#{nav.buttons.allUsers}"
                            sec:authorize="hasAuthority('ADMIN')">Users</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
                            th:href="@{/insides/allOrders/page/1}"
+                           th:text="#{nav.buttons.allOrders}"
                            sec:authorize="hasAnyAuthority('USER', 'MANAGER')">Orders</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Lang
+                        <a class="nav-link dropdown-toggle" href="#"
+                           id="navbarDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false"
+                           th:text="#{nav.buttons.lang}">
                         </a>
 
 <!--                        old lang-->
@@ -66,9 +71,9 @@
                     </li>
                 </ul>
 
-                <form class="d-flex" th:action="@{/logout}" method="get">
+                <form sec:authorize="isAuthenticated()" class="d-flex" th:action="@{/logout}" method="get">
                     <button class="btn btn-outline-danger" name="registration"
-                            type="Submit">Logout</button>
+                            type="Submit" th:text="#{nav.buttons.logout}">Logout</button>
                 </form>
             </div>
         </div>

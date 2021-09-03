@@ -23,7 +23,7 @@
 
         <div class="form-group">
           <div class="col-sm-9">
-            <input type="text" th:field="*{carName}" placeholder="Car name"
+            <input type="text" th:field="*{carName}" th:placeholder="#{carAddPage.text.name}"
                    class="form-control"/>
             <label th:if="${#fields.hasErrors('carName')}" th:errors="*{carName}"
                   class="validation-message"></label>
@@ -32,7 +32,7 @@
 
         <div class="form-group">
           <div class="col-sm-9">
-            <input type="text" th:field="*{carMark}" placeholder="Car mark"
+            <input type="text" th:field="*{carMark}" th:placeholder="#{carAddPage.text.mark}"
                    class="form-control"/> <label
                   th:if="${#fields.hasErrors('carMark')}" th:errors="*{carMark}"
                   class="validation-message"></label>
@@ -41,7 +41,7 @@
 
         <div class="form-group">
           <div class="col-sm-9">
-            <input type="text" th:field="*{carQuality}" placeholder="Car quality"
+            <input type="text" th:field="*{carQuality}" th:placeholder="#{carAddPage.text.quality}"
                    class="form-control"/> <label
                   th:if="${#fields.hasErrors('carQuality')}" th:errors="*{carQuality}"
                   class="validation-message"></label>
@@ -50,7 +50,7 @@
 
         <div class="form-group">
           <div class="col-sm-9">
-            <input type="text" th:field="*{carPrice}" placeholder="Car price"
+            <input type="text" th:field="*{carPrice}" th:placeholder="#{carAddPage.text.price}"
                    class="form-control"/> <label
                   th:if="${#fields.hasErrors('carPrice')}" th:errors="*{carPrice}"
                   class="validation-message"></label>
@@ -59,7 +59,7 @@
 
         <div class="form-group">
           <div class="col-sm-9">
-            <button type="submit" class="btn btn-primary btn-block">Add car</button>
+            <button type="submit" class="btn btn-primary btn-block" th:text="#{carAddPage.text.addCar}">Add car</button>
           </div>
         </div>
 
