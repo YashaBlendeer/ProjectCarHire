@@ -41,8 +41,11 @@
 
         <div class="form-group">
           <div class="col-sm-9">
-            <input type="text" th:field="*{carQuality}" th:placeholder="#{carAddPage.text.quality}"
-                   class="form-control"/> <label
+            <input type="text" th:field="*{carQuality}"
+                   th:placeholder="#{carAddPage.text.quality}"
+                   class="form-control"
+                   minlength="1"
+                    maxlength="1"/> <label
                   th:if="${#fields.hasErrors('carQuality')}" th:errors="*{carQuality}"
                   class="validation-message"></label>
           </div>
