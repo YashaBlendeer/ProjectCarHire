@@ -6,6 +6,7 @@ import com.yashablendeer.carhire.service.OrderService;
 import com.yashablendeer.carhire.service.RepairService;
 import com.yashablendeer.carhire.service.UserService;
 import com.yashablendeer.carhire.util.DateUtil;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,7 +28,7 @@ import java.time.LocalDateTime;
  * @author yaroslava
  * @version 1.0
  */
-
+@Log4j2
 @Controller
 public class OrderController {
 
@@ -50,10 +51,6 @@ public class OrderController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
         modelAndView.addObject("userName", user.getName() + " " + user.getLastName());
-
-        //time limiter
-        modelAndView.addObject("now", LocalDateTime.now().format(DateUtil.DTF));
-        modelAndView.addObject("then", LocalDateTime.now().plusHours(1).format(DateUtil.DTF));
 
         Car car = carService.findCarById(id);
         modelAndView.addObject("currentCar", car);

@@ -4,6 +4,7 @@ import com.yashablendeer.carhire.model.Role;
 import com.yashablendeer.carhire.model.User;
 import com.yashablendeer.carhire.repo.RoleRepository;
 import com.yashablendeer.carhire.repo.UserRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,6 +21,7 @@ import java.util.List;
  * @version 1.0
  */
 
+@Log4j2
 @Service
 public class UserService {
 
@@ -79,8 +81,12 @@ public class UserService {
         User user = findUserByUserId(userId);
         if (user.getActive()) {
             user.setActive(false);
+            log.info("User active status was changed to banned");
+
         } else {
             user.setActive(true);
+            log.info("User active status was changed to active");
+
         }
         return userRepository.save(user);
     }
@@ -103,6 +109,8 @@ public class UserService {
             userRole = roleRepository.findByRole("MANAGER");
         }
         user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+        log.info("User role was changed to {}", userRole);
+
         return userRepository.save(user);
     }
 }

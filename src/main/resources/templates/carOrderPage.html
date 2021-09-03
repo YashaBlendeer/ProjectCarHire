@@ -41,7 +41,6 @@
                     </div>
                 </div>
 
-<!--                TODO remove hardcode driver price-->
                 <label for="driverPrice">Driver price per hour:</label>
                 <input type="text" class="form-control" id="driverPrice" th:value="30" readonly>
 
@@ -62,7 +61,7 @@
                         <label th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}"
                                class="validation-message" for="startdatetime">Start date:</label>
                         <input th:field="*{startTime}"
-                               th:attr="min=${now}"
+                               onclick="calcMinStartTime()"
                                onchange="getStartTime()"
                                id="startdatetime" type="datetime-local"  class="form-control" required>
                     </div>
@@ -73,7 +72,8 @@
                         <label th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}"
                                class="validation-message" for="enddatetime" ></label>
                         <input th:field="*{endTime}"
-                               onchange="getEndTime(); calcMinEndTime()"
+                               onclick="calcMinEndTime()"
+                               onchange="getEndTime()"
                                id="enddatetime" type="datetime-local"  class="form-control" required>
                     </div>
                 </div>

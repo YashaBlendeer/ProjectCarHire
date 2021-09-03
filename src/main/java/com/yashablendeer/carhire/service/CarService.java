@@ -4,6 +4,7 @@ import com.yashablendeer.carhire.model.*;
 import com.yashablendeer.carhire.repo.CarRepository;
 import com.yashablendeer.carhire.repo.OrderRepository;
 import com.yashablendeer.carhire.repo.RepairRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +20,7 @@ import java.util.List;
  * @version 1.0
  */
 
+@Log4j2
 @Service
 public class CarService {
     private CarRepository carRepository;
@@ -85,5 +87,7 @@ public class CarService {
         toDelete.stream().map(Order::getId).forEach(idOrder -> repairRepository.deleteByOrderId(idOrder));
         orderRepository.deleteByCarId(id);
         carRepository.deleteById(id);
+        log.info("A car (id = {}) was deleted", id);
+
     }
 }

@@ -48,7 +48,7 @@
 
                 <td th:each="role : ${user.getRoles}" th:text="${role.role}">role</td>
                 <td><a th:each="role : ${user.getRoles}"
-                       th:utext="${role.role} == 'MANAGER' ? #{allUsers.btn.upgrade} : #{allUsers.btn.downgrade}"
+                       th:utext="${role.role} == 'MANAGER' ? #{allUsers.btn.downgrade} : #{allUsers.btn.upgrade}"
                        th:href="@{/manager_handler(personId=${user.id}, sort-field=${sortField}, currentPage=${currentPage})}"
                        th:classappend="${role.role} == 'ADMIN' ? disabled : active"
                        class="btn btn-primary"></a></td>

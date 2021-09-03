@@ -38,8 +38,19 @@ function calcPrice() {
 
 }
 
+function calcMinStartTime() {
+    let now = Date.now();
+    let minStartDate = new Date(new Date(now)
+        .toString().split('GMT')[0]+' UTC')
+        .toISOString().split('.')[0]
+        .slice(0, -3);
+    document.getElementById('startdatetime').setAttribute("min", minStartDate);
+
+    return minStartDate;
+}
 function calcMinEndTime() {
     let startDate = new Date(getStartTime());
+
     startDate.setHours(startDate.getHours() + 1);
     let minEndDate = new Date(new Date(startDate)
                                 .toString().split('GMT')[0]+' UTC')

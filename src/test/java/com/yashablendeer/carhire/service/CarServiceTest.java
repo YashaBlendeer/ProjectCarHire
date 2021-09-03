@@ -26,12 +26,6 @@ public class CarServiceTest {
     @Mock
     private CarRepository carRepository;
 
-    @Mock
-    private OrderRepository orderRepository;
-
-    @Mock
-    private RepairRepository repairRepository;
-
     @InjectMocks
     CarService carService;
 
@@ -60,29 +54,6 @@ public class CarServiceTest {
     public void findCarsByCarMark() {
 
 
-    }
-
-    @Test
-    public void findCarsByCarQuality() {
-        //not working
-//        List list = new ArrayList();
-//        Car car1 = new Car(63, "xc90", "Volvo", "M", 115, Status.READY);
-//        Car car2 = new Car(56, "Caravelle", "Volkswagen", "M", 112, Status.REPAIR);
-//        Car car3 = new Car(12, "Quoris", "Kia", "F", 200, Status.READY);
-//        Collections.addAll(list, car1, car2, car3);
-//
-//        when(carRepository.save(car1)).thenReturn(car1);
-//        when(carRepository.save(car2)).thenReturn(car2);
-//        when(carRepository.save(car3)).thenReturn(car3);
-//        carRepository.save(car1);
-//        carRepository.save(car2);
-//        carRepository.save(car3);
-//
-//        List foundCars = carService.findCarsByCarQuality("M");
-//        assertNotNull(foundCars);
-//        assertEquals(2, foundCars.size());
-//        assertTrue(foundCars.contains(car1));
-//        assertTrue(foundCars.contains(car2));
     }
 
     @Test
@@ -115,12 +86,4 @@ public class CarServiceTest {
 
     }
 
-    //not working
-    @Test
-    public void deleteCarById() {
-//        Car car1 = new Car(63, "xc90", "Volvo", "M", 115, Status.READY);
-//
-////        when(carRepository.deleteById(anyInt()))
-//        assertTrue(carService.deleteCarById(63));
-    }
 }
