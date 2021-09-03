@@ -5,7 +5,6 @@ import com.yashablendeer.carhire.service.CarService;
 import com.yashablendeer.carhire.service.OrderService;
 import com.yashablendeer.carhire.service.RepairService;
 import com.yashablendeer.carhire.service.UserService;
-import com.yashablendeer.carhire.util.DateUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -79,6 +78,7 @@ public class OrderController {
 
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("redirect:{id}");
+            log.warn("Error occured during ordering: {}", order);
         } else {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -89,6 +89,8 @@ public class OrderController {
             redirectAttrs.addAttribute("id", carId).addFlashAttribute("successMessage",
                                                     "Order was sent for processing successfully");
             modelAndView.addObject("car", new Car());
+            log.info("Order was sent: {}", order);
+
             modelAndView.setViewName("redirect:{id}");
 
         }
@@ -108,24 +110,8 @@ public class OrderController {
     public ModelAndView acceptOrderHandler(@RequestParam(name="orderId")int orderId,
                                            @RequestParam(required=false, name = "currentPage") final String currentPage) {
         ModelAndView modelAndView = new ModelAndView();
-        //TODO move from controller
-        Order order = orderService.findOrderById(orderId);
-        order.setStatus(Status.ACCEPTED);
-        orderService.save(order);
+        orderService.acceptOrder(orderId);
         modelAndView.setViewName("redirect:insides/allOrders/page/" + currentPage);
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/rejectOrder", method = RequestMethod.GET)
-    public ModelAndView rejectOrderHandler(@RequestParam(name="orderId")int orderId) {
-        ModelAndView modelAndView = new ModelAndView();
-        //TODO move from controller
-        Order order = orderService.findOrderById(orderId);
-        order.setStatus(Status.REJECTED);
-        orderService.save(order);
-
-        modelAndView.addObject("rejectedOrder", new Order());
-        modelAndView.setViewName("redirect:insides/home");
         return modelAndView;
     }
 
@@ -133,10 +119,7 @@ public class OrderController {
     public ModelAndView payOrderHandler(@RequestParam(name="orderId")int orderId,
                                         @RequestParam(required=false, name = "currentPage") final String currentPage) {
         ModelAndView modelAndView = new ModelAndView();
-        //TODO move from controller
-        Order order = orderService.findOrderById(orderId);
-        order.setPayStatus(Status.PAYED);
-        orderService.save(order);
+        orderService.payOrder(orderId);
         modelAndView.setViewName("redirect:insides/allOrders/page/" + currentPage);
         return modelAndView;
     }
@@ -144,11 +127,7 @@ public class OrderController {
     public ModelAndView payRepairHandler(@RequestParam(name="orderId")int orderId,
                                          @RequestParam(required=false, name = "currentPage") final String currentPage) {
         ModelAndView modelAndView = new ModelAndView();
-        //TODO move from controller
-        Repair repair = repairService.findRepairByOrderId(orderId);
-        repair.setPayStatus(Status.PAYED);
-        repair.getOrder().getCar().setStatus(Status.READY);
-        repairService.save(repair);
+        repairService.payRepair(orderId);
         modelAndView.setViewName("redirect:insides/allOrders/page/" + currentPage);
         return modelAndView;
     }
@@ -158,10 +137,7 @@ public class OrderController {
     public ModelAndView finishOrderHandler(@RequestParam(name="orderId")int orderId,
                                            @RequestParam(required=false, name = "currentPage") final String currentPage) {
         ModelAndView modelAndView = new ModelAndView();
-        //TODO move from controller
-        Order order = orderService.findOrderById(orderId);
-        order.setStatus(Status.FINISHED);
-        orderService.save(order);
+        orderService.finishOrder(orderId);
         modelAndView.setViewName("redirect:insides/allOrders/page/" + currentPage);
         return modelAndView;
     }
@@ -189,11 +165,10 @@ public class OrderController {
         ModelAndView modelAndView = new ModelAndView();
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("carRepairPage");
+            log.warn("Error occured during seeting repair for order #{}", id);
         } else {
-            carService.repairHandler(orderService.findOrderById(id).getCar().getId());
-            repair.setOrder(orderService.findOrderById(id));
-            repair.setPayStatus(Status.UNPAYED);
-            repairService.save(repair);
+            carService.repairHandler(orderService.findOrderById(id).getCar().getId(), id, repair);
+
             redirectAttrs.addAttribute("id", id).addFlashAttribute("successMessage", "Repair added successfully");
             modelAndView.addObject("car", new Car());
             modelAndView.setViewName("redirect:{id}");

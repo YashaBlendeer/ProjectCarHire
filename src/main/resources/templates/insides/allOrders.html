@@ -57,13 +57,13 @@
             <td th:text="${order.orderPrice}">status</td>
 
             <td th:text="${#temporals.format(order.startTime,
-                                                            'dd-MMM-yyyy HH:mm',
-                                                            #locale.forLanguageTag(currentLang))}">date
+                           'dd-MMM-yyyy HH:mm',
+                           #locale.forLanguageTag(currentLang))}">date
             </td>
             <td
                     th:text="${#temporals.format(order.endTime,
-                                                                'dd-MMM-yyyy HH:mm',
-                                                                #locale.forLanguageTag(currentLang))}">date</td>
+                            'dd-MMM-yyyy HH:mm',
+                            #locale.forLanguageTag(currentLang))}">date</td>
 
 
             <td th:text="${order.status}">status</td>

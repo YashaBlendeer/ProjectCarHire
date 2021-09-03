@@ -72,12 +72,21 @@ public class CarService {
     /**
      * Sets status "REPAIR" for car
      *
-     * @param id ID of car, which status will be changed
+     * @param carId ID of car, which status will be changed
+     * @param orderId ID of order, where repair sets
+     * @param repair repair, which sets
      */
 
-    public Car repairHandler(Integer id) {
-        Car car =  carRepository.findById(id);
+    @Transactional
+    public Car repairHandler(Integer carId, Integer orderId, Repair repair) {
+        Car car =  carRepository.findById(carId);
         car.setStatus(Status.REPAIR);
+
+        repair.setOrder(orderRepository.findById(orderId));
+        repair.setPayStatus(Status.UNPAYED);
+        repairRepository.save(repair);
+        log.info("Repair for order #{} was set", orderId);
+
         return carRepository.save(car);
     }
 

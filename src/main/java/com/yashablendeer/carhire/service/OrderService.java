@@ -5,6 +5,7 @@ import com.yashablendeer.carhire.model.Order;
 import com.yashablendeer.carhire.model.Status;
 import com.yashablendeer.carhire.model.User;
 import com.yashablendeer.carhire.repo.OrderRepository;
+import lombok.extern.log4j.Log4j2;
 import org.apache.el.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ import java.util.stream.IntStream;
  * @version 1.0
  */
 
+@Log4j2
 @Service
 public class OrderService {
     private OrderRepository orderRepository;
@@ -58,16 +60,40 @@ public class OrderService {
     @Transactional
     public void deleteOrderById(int id) {
         orderRepository.deleteById(id);
+        log.info("Order #{} was deleted", id);
     }
 
 
-    //TODO transactional?
+    @Transactional
     public Order rejectOrder (int id, String reason) {
         Order order = orderRepository.findById(id);
         order.setDescription(reason);
         order.setStatus(Status.REJECTED);
+        log.info("Order # {} was rejected by reason: {}", id, reason);
         return orderRepository.save(order);
     }
+
+    public Order acceptOrder (int id) {
+        Order order = orderRepository.findById(id);
+        order.setStatus(Status.ACCEPTED);
+        log.info("Order #{} was accepted", id);
+        return orderRepository.save(order);
+    }
+
+    public Order payOrder (int id) {
+        Order order = orderRepository.findById(id);
+        order.setPayStatus(Status.PAYED);
+        log.info("Order #{} was payed", id);
+        return orderRepository.save(order);
+    }
+
+    public Order finishOrder (int id) {
+        Order order = orderRepository.findById(id);
+        order.setStatus(Status.FINISHED);
+        log.info("Order #{} was finished", id);
+        return orderRepository.save(order);
+    }
+
 
     public Order saveBuilder (Order order, Car car, User user) {
 
