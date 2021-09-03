@@ -40,6 +40,7 @@
                         <label th:if="${#fields.hasErrors('passport')}" th:errors="*{passport}"
                                class="validation-message"></label>
                         <input th:field="*{passport}"
+                               minlength="8"
                                th:placeholder="#{orderPage.text.passport}" class="form-control" required/>
                     </div>
                 </div>
