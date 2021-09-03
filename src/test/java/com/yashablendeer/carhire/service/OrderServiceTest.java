@@ -117,8 +117,4 @@ public class OrderServiceTest {
         assertEquals(1, result.size());
     }
 
-    @Test
-    public void rejectOrder() {
-
-    }
 }

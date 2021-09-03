@@ -15,8 +15,8 @@
 <div th:insert="navbar.html :: navigation"></div>
 
 <div class="container">
-  <h1>Error occurred</h1>
-  <p>
+  <h1 th:text="#{error.text}">Error occurred</h1>
+  <p th:text="#{error.text.message}">
     An error has occurred :(
   </p>
 </div>
