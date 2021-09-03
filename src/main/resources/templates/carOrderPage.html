@@ -19,15 +19,18 @@
             <form autocomplete="off" th:action="@{'/carOrderPage/' + ${currentCar.id}}"
                   th:object="${order}" method="post" class="form-horizontal"
                   role="form">
-                <label for="userName">Ordered by:</label>
+                <label for="userName"
+                       th:text="#{orderPage.text.orderedBy}">Ordered by:</label>
                 <input type="text" class="form-control" id="userName" th:value="${userName}" readonly>
 
-                <label for="carName">Ordered car:</label>
+                <label for="carName"
+                       th:text="#{orderPage.text.orderedCar}">Ordered car:</label>
                 <input type="text" class="form-control" id="carName"
                        th:value="${currentCar.carName}"
                        readonly>
 
-                <label for="carPrice">Car price per hour:</label>
+                <label for="carPrice"
+                       th:text="#{orderPage.text.carPrice}">Car price per hour:</label>
                 <input type="text" class="form-control" id="carPrice" th:value="${currentCar.carPrice}" readonly>
 
 <!--                TODO passport validate-->
@@ -37,17 +40,18 @@
                         <label th:if="${#fields.hasErrors('passport')}" th:errors="*{passport}"
                                class="validation-message"></label>
                         <input th:field="*{passport}"
-                               placeholder="Passport" class="form-control" required/>
+                               th:placeholder="#{orderPage.text.passport}" class="form-control" required/>
                     </div>
                 </div>
 
-                <label for="driverPrice">Driver price per hour:</label>
+                <label for="driverPrice" th:text="#{orderPage.text.driverPrice}">Driver price per hour:</label>
                 <input type="text" class="form-control" id="driverPrice" th:value="30" readonly>
 
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="form-check">
-                            <label class="form-check-label" for="driver">With driver</label>
+                            <label class="form-check-label" for="driver"
+                                   th:text="#{orderPage.text.needDriver}">With driver</label>
                             <input th:checked="*{withDriver}" th:field="*{withDriver}"
                                    class="form-check-input" type="checkbox" id="driver">
                         </div>
@@ -82,14 +86,15 @@
 
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <label for="orderprice">Price:</label>
+                        <label for="orderprice" th:text="#{orderPage.text.orderPrice}">Price:</label>
                         <input th:field="*{orderPrice}"
                                id="orderprice" type="text"  class="form-control" readonly>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <button type="submit" class="btn btn-primary btn-block">Order car</button>
+                        <button type="submit" class="btn btn-primary btn-block"
+                                th:text="#{common.text.order}">Order car</button>
                     </div>
                 </div>
             </form>

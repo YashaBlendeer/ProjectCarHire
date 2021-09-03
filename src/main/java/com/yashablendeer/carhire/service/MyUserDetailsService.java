@@ -1,6 +1,7 @@
 package com.yashablendeer.carhire.service;
 import com.yashablendeer.carhire.model.Role;
 import com.yashablendeer.carhire.model.User;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +23,7 @@ import java.util.Set;
  * @version 1.0
  */
 
+@Log4j2
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
@@ -46,6 +48,7 @@ public class MyUserDetailsService implements UserDetailsService {
     }
 
     private UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
+        log.info("Authenticated user: {}", user);
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),
                 user.getActive(), true, true, true, authorities);
     }
