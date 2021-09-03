@@ -37,15 +37,16 @@ public class CarController {
     }
 
     @PostMapping(value = "/carAddPage")
-    public ModelAndView createNewCar(@Valid Car car, BindingResult bindingResult) {
+    public ModelAndView createNewCar(@Valid Car car, BindingResult bindingResult, RedirectAttributes redirectAttrs) {
         ModelAndView modelAndView = new ModelAndView();
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("carAddPage");
         } else {
             carService.saveCar(car);
-            modelAndView.addObject("successMessage", "Car has been registered successfully");
+            redirectAttrs.addFlashAttribute("successMessage", "Car has been registered successfully");
+//            modelAndView.addObject("successMessage", "Car has been registered successfully");
             modelAndView.addObject("car", new Car());
-            modelAndView.setViewName("carAddPage");
+            modelAndView.setViewName("redirect:carAddPage");
 
         }
         return modelAndView;
